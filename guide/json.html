@@ -252,11 +252,6 @@
                                 Client
                             </a>
                         </li>
-                                            <li class="">
-                            <a href="https://vapor.github.io/documentation/http/server.html">
-                                Server
-                            </a>
-                        </li>
                                         </ul>
                 </section>
                         </div>
@@ -268,11 +263,10 @@
 <p>JSON is an integral part of Vapor. It powers Vapor's <a href="config.html">Config</a> and is incredibly easy to use in both requests and responses.</p>
 <h2 id="request">Request</h2>
 <p>JSON is automatically available in <code>request.data</code> alongside form-urlencoded data and query data. This allows you to focus on making a great API, not worrying about what content types data will be sent in.</p>
-<pre><code class="language-swift">drop.any("hello") { request in
-    guard let name = request.data["name"].string else {
+<pre><code class="language-swift">drop.get("hello") { request in
+    guard let name = request.data["name"]?.string else {
         throw Abort.badRequest
     }
-
     return "Hello, \(name)!"
 }</code></pre>
 <p>This will return a greeting for any HTTP method or content type that the <code>name</code> is sent as, including JSON.</p>

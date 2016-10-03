@@ -252,11 +252,6 @@
                                 Client
                             </a>
                         </li>
-                                            <li class="">
-                            <a href="https://vapor.github.io/documentation/http/server.html">
-                                Server
-                            </a>
-                        </li>
                                         </ul>
                 </section>
                         </div>
@@ -278,7 +273,7 @@
 }</code></pre>
 <p>Simple controllers don't need to conform to any protocols. You are free to design them however you see fit.</p>
 <h3 id="registering">Registering</h3>
-<p>The only required structure is the signature of each method in the controller. In order to register this method into the router, it must have a signature like <code>(Request) throws -&gt; ResponseRepresentable</code>.</p>
+<p>The only required structure is the signature of each method in the controller. In order to register this method into the router, it must have a signature like <code>(Request) throws -&gt; ResponseRepresentable</code>. <code>Request</code> and <code>ResponseRepresentable</code> are made available by importing the <code>HTTP</code> module.</p>
 <pre><code class="language-swift">let hc = HelloController()
 drop.get("hello", hc.sayHello)</code></pre>
 <p>Since the signature of our <code>sayHello</code> method matches the signature of the closure for the <code>drop.get</code> method, we can pass it directly.</p>

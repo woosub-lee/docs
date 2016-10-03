@@ -252,11 +252,6 @@
                                 Client
                             </a>
                         </li>
-                                            <li class="">
-                            <a href="https://vapor.github.io/documentation/http/server.html">
-                                Server
-                            </a>
-                        </li>
                                         </ul>
                 </section>
                         </div>
@@ -319,7 +314,7 @@ let key = APIKey(id: username, secret: password)</code></pre>
 <pre><code class="language-swift">static func authenticate(credentials: Credentials) throws -&gt; Auth.User {
     switch credentials {
     ...
-    case id as Identifier:
+    case let id as Identifier:
         guard let user = try User.find(id.id) else {
             throw Abort.custom(status: .badRequest, message: "Invalid identifier.")
         }

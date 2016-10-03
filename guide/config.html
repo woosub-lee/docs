@@ -252,11 +252,6 @@
                                 Client
                             </a>
                         </li>
-                                            <li class="">
-                            <a href="https://vapor.github.io/documentation/http/server.html">
-                                Server
-                            </a>
-                        </li>
                                         </ul>
                 </section>
                         </div>
@@ -355,21 +350,21 @@
 </blockquote>
 <p>Please notice that servers.json, and production/servers.json both declare the same keys. host, and port. In our application, we'll call:</p>
 <pre><code class="language-swift">// will load 0.0.0.0 or 127.0.0.1 based on above config
-let host = drop.config["servers", "http", "host"].string
+let host = app.config["servers", "http", "host"].string
 // will load 9000, or environment variable port.
-let port = drop.config["servers", "http", "port"].int</code></pre>
+let port = app.config["servers", "http", "port"].int</code></pre>
 <h2 id="command-line">COMMAND LINE</h2>
 <p>In addition to json files nested within the Config/ directory, we can also use the command line to pass arguments into our config. By default, these values will be set as the &quot;cli&quot; file, but more complex options are also available.</p>
 <h4 id="1">1. <code>--KEY=VALUE</code></h4>
 <p>Arguments set through the command line can be accessed through config's cli file. For example, the following CLI command:</p>
 <pre><code class="language-bash">--mongo-password=$MONGO_PASSWORD</code></pre>
 <p>would be accessible within your application by using the following:</p>
-<pre><code class="language-swift">let mongoPassword = drop.config["cli", "mongo-password"].string</code></pre>
+<pre><code class="language-swift">let mongoPassword = app.config["cli", "mongo-password"].string</code></pre>
 <h4 id="2---configfile-namekeycustom-value">2. --CONFIG:FILE-NAME.KEY=CUSTOM-VALUE</h4>
 <p>If you want command line arguments set to a file besides &quot;cli&quot;, you can use this more advanced specification. For example, the following CLI command:</p>
 <pre><code class="language-bash">--config:keys.analytics=124ZH61F</code></pre>
 <p>would be accessible within your application by using the following:</p>
-<pre><code class="language-swift">let analyticsKey = drop.config["keys", "analytics"].string</code></pre>
+<pre><code class="language-swift">let analyticsKey = app.config["keys", "analytics"].string</code></pre>
         </main>
 
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
