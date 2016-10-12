@@ -197,7 +197,7 @@
                             <section>
                     <h3>Auth</h3>
                     <ul>
-                                            <li class="active">
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/auth/user.html">
                                 User
                             </a>
@@ -252,7 +252,7 @@
                                 Client
                             </a>
                         </li>
-                                            <li class="">
+                                            <li class="active">
                             <a href="https://vapor.github.io/documentation/http/server.html">
                                 Server
                             </a>
@@ -264,92 +264,142 @@
 
         <main>
             <a href="https://github.com/vapor/documentation/blob/master/CONTRIBUTING.md" class="edit">✎ Edit on GitHub</a>
-            <h1 id="auth">Auth</h1>
-<p>Authentication and authorization is focused around the <code>Auth.User</code> protocol. Authentication is analagous to asking: &quot;Who is this?&quot;, while authorization is analagous to asking: &quot;What can they do?&quot;. Vapor includes an extensible authentication system that you can use as a base for more sophisticated authorization.</p>
-<blockquote>
-<p>Note: An <a href="https://github.com/vapor/auth-example">auth-example</a> project is available on GitHub.</p>
-</blockquote>
-<h2 id="user-protocol">User Protocol</h2>
-<p>Any type can conform to the <code>Auth.User</code> protocol, but they are commonly added onto Fluent <code>Model</code>s.</p>
+            <h1 id="server">Server</h1>
+<p>The server is responsible for accepting connections from clients, parsing their requests, and delivering them a response. </p>
+<h2 id="default">Default</h2>
+<p>Starting your Droplet with a default server is simple.</p>
 <pre><code class="language-swift">import Vapor
-import Auth
 
-final class User: Model {
-    var id: Node?
-    var name: String
+let drop = Droplet()
 
-    ...
-}
-
-extension User: Auth.User {
-    static func authenticate(credentials: Credentials) throws -&gt; Auth.User {
-
-    }
-
-    static func register(credentials: Credentials) throws -&gt; Auth.User {
-
+drop.run()</code></pre>
+<p>The default server will bind to host <code>0.0.0.0</code> at port <code>8080</code>.</p>
+<h2 id="config">Config</h2>
+<p>If you are using a <code>Config/servers.json</code> file, this is where you can easily change your host and port or even boot multiple servers.</p>
+<pre><code class="language-json">{
+    "default": {
+        "port": "$PORT:8080",
+        "host": "0.0.0.0",
+        "securityLayer": "none"
     }
 }</code></pre>
-<p>Here is an example <code>User</code> class with the <code>Auth.User</code> protocol requirements stubbed. Note that the name of our class and the protocol are the same. This is why we use the <code>Auth.</code> prefix to differentiate the protocol from the <code>Auth</code> module from our <code>User</code> class.</p>
-<h3 id="authenticate">Authenticate</h3>
-<p>A user is authenticated when a set of credentials is passed to the static <code>authenticate</code> method and the matching user is returned.</p>
-<h4 id="credentials">Credentials</h4>
-<pre><code class="language-swift">protocol Credentials { }</code></pre>
-<p>The credentials protocol is an empty protocol that any type can conform to. This gives great flexibility to your authentication model, but also requires that you properly handle the case of unsupported credential types.</p>
-<h4 id="access-token">Access Token</h4>
-<p>One of the simplest credential types included is <code>AccessToken</code>. It carries a <code>String</code> based token that will be used to authenticate the user.</p>
-<p>Let's look at how we might support the access token type.</p>
-<pre><code class="language-swift">static func authenticate(credentials: Credentials) throws -&gt; Auth.User {
-    switch credentials {
-    case let accessToken as AccessToken:
-        guard let user = try User.query().filter("access_token", accessToken.string).first() else {
-            throw Abort.custom(status: .forbidden, message: "Invalid access token.")    
+<p>The default <code>servers.json</code> is above. The port with try to resolve the environment variable <code>$PORT</code> or fallback to <code>8080</code>.</p>
+<h3 id="multiple">Multiple</h3>
+<p>You can start multiple servers in the same application. This is especially useful if you want to boot an <code>HTTP</code> and <code>HTTPS</code> server side by side.</p>
+<pre><code class="language-json">{
+    "plaintext": {
+        "port": "80",
+        "host": "vapor.codes",
+        "securityLayer": "none"
+    },
+    "secure": {
+        "port": "443",
+        "host": "vapor.codes",
+        "securityLayer": "tls",
+        "tls": {
+            "certificates": "none",
+            "signature": "selfSigned"
         }
-
-        return user
-    default:
-        let type = type(of: credentials)
-        throw Abort.custom(status: .forbidden, message: "Unsupported credential type: \(type).")
-    }
+    },
 }</code></pre>
-<p>The first step is to cast the credentials to the type we want to support--in this case, <code>AccessToken</code>. If we do not have an access token, we will inform the client that the credentials are invalid.</p>
-<p>Once we have the access token, we will use it to query the <code>User</code> model for an entry with a matching access token. This is assuming the <code>users</code> table or collection has the access tokens stored on it. You may opt to store them somewhere else.</p>
-<p>Once we have found the user associated with the supplied access token, we simply return it.</p>
-<h4 id="identifier">Identifier</h4>
-<p>Vapor uses the <code>Identifier</code> credential type internally to lookup users from sessions. You can read more in the <a href="request.html">Request</a> section.</p>
-<h3 id="register">Register</h3>
-<p>Similar to the authenticate method, the register method takes credentials. But instead of fetching the user from the data store, it provides a convenient way to create the user. You are not required to register your users through this method.</p>
-<h2 id="example">Example</h2>
-<p>Here is an example of a User that supports multiple credentials.</p>
-<pre><code class="language-swift">extension User: Auth.User {
-    static func authenticate(credentials: Credentials) throws -&gt; Auth.User {
-        let user: User?
-
-        switch credentials {
-        case let id as Identifier:
-            user = try User.find(id.id)
-        case let accessToken as AccessToken:
-            user = try User.query().filter("access_token", accessToken.string).first()
-        case let apiKey as APIKey:
-            user = try User.query().filter("email", apiKey.id).filter("password", apiKey.secret).first()
-        default:
-            throw Abort.custom(status: .badRequest, message: "Invalid credentials.")
-        }
-
-        guard let u = user else {
-            throw Abort.custom(status: .badRequest, message: "User not found.")
-        }
-
-        return u
-    }
-
-    static func register(credentials: Credentials) throws -&gt; Auth.User {
-        ...
-    }
-}</code></pre>
+<h2 id="tls">TLS</h2>
+<p>TLS (formerly SSL) can be configured with a variety of different certificate and signature types.</p>
+<h3 id="verify">Verify</h3>
+<p>Verificiation of hosts and certificates can be disabled. They are enabled by default.</p>
 <blockquote>
-<p>Note: Try not to store passwords. If you must, hash and salt them.</p>
+<p>Note: Be extremely careful when disabling these options.</p>
 </blockquote>
+<pre><code class="language-json">"tls": {
+   "verifyHost": false,
+   "verifyCertificates": false
+}</code></pre>
+<h3 id="certificates">Certificates</h3>
+<h4 id="none">None</h4>
+<pre><code class="language-json">"tls": {
+    "certificates": "none"
+}</code></pre>
+<h4 id="chain">Chain</h4>
+<pre><code class="language-json">"tls": {
+    "certificates": "chain",
+    "chainFile": "/path/to/chainfile"
+}</code></pre>
+<h4 id="files">Files</h4>
+<pre><code class="language-json">"tls": {
+    "certificates": "files",
+    "certificateFile": "/path/to/cert.pem",
+    "privateKeyFile": "/path/to/key.pem"
+}</code></pre>
+<h4 id="certificate-authority">Certificate Authority</h4>
+<pre><code class="language-json">"tls": {
+    "certificates": "ca"
+}</code></pre>
+<h3 id="signature">Signature</h3>
+<h4 id="self-signed">Self Signed</h4>
+<pre><code class="language-json">"tls": {
+    "signature": "selfSigned"
+}</code></pre>
+<h4 id="signed-file">Signed File</h4>
+<pre><code class="language-json">"tls": {
+    "signature": "signedFile",
+    "caCertificateFile": "/path/to/file"
+}</code></pre>
+<h4 id="signed-directory">Signed Directory</h4>
+<pre><code class="language-json">"tls": {
+    "signature": "signedDirectory",
+    "caCertificateDirectory": "/path/to/dir"
+}</code></pre>
+<h2 id="example">Example</h2>
+<p>Here is an example <code>servers.json</code> file using certificate files with a self signed signature and host verification redundantly set to <code>true</code>.</p>
+<pre><code class="language-json">{
+    "secure": {
+        "port": "8443",
+        "host": "0.0.0.0",
+        "securityLayer": "tls",
+        "tls": {
+            "verifyHost": true,
+            "certificates": "files",
+            "certificateFile": "/vapor/certs/cert.pem",
+            "privateKeyFile": "/vapor/certs/key.pem",
+            "signature": "selfSigned"
+        }
+    }
+}</code></pre>
+<h2 id="manual">Manual</h2>
+<p>Servers can also be configured manually, without configuration files. </p>
+<blockquote>
+<p>Note: If servers are configured programatically, they override any config settings.</p>
+</blockquote>
+<h3 id="simple">Simple</h3>
+<p>The <code>run</code> method on the Droplet takes a dictionary of server configuration objects. The key is the name of the server.</p>
+<pre><code class="language-swift">import Vapor
+
+let drop = Droplet()
+
+drop.run(servers: [
+    "default": (host: "vapor.codes", port: 8080, securityLayer: .none)
+]</code></pre>
+<h3 id="tls-1">TLS</h3>
+<p>TLS can also be configured manually, and works similarly to the <code>servers.json</code> config files described above.</p>
+<pre><code class="language-swift">import Vapor
+import TLS
+
+let drop = Droplet()
+
+let config = try TLS.Config(
+    mode: .server,
+    certificates: .files(
+        certificateFile: "/Users/tanner/Desktop/certs/cert.pem", 
+        privateKeyFile: "/Users/tanner/Desktop/certs/key.pem", 
+        signature: .selfSigned
+    ),
+    verifyHost: true,
+    verifyCertificates: true
+)
+
+drop.run(servers: [
+    "plaintext": ("vapor.codes", 8080, .none),
+    "secure": ("vapor.codes", 8443, .tls(config)),
+])</code></pre>
         </main>
 
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

@@ -252,6 +252,11 @@
                                 Client
                             </a>
                         </li>
+                                            <li class="">
+                            <a href="https://vapor.github.io/documentation/http/server.html">
+                                Server
+                            </a>
+                        </li>
                                         </ul>
                 </section>
                         </div>
@@ -285,6 +290,26 @@ try drop.client.post("http://some-endpoint/json", headers: ["Auth": "Token my-au
                        body: Body = []) throws -&gt; Response</code></pre>
 <p>For example:</p>
 <pre><code class="language-swift">try drop.client.request(.other(method: "CUSTOM"), "http://some-domain", headers: ["My": "Header"], query: ["key": "value"], body: [])</code></pre>
+<h2 id="config">Config</h2>
+<p>The <code>Config/clients.json</code> file can be used to modify the client's settings.</p>
+<h3 id="tls">TLS</h3>
+<p>Host and certificate verification can be disabled.</p>
+<blockquote>
+<p>Note: Use extreme caution when modifying these settings.</p>
+</blockquote>
+<pre><code class="language-json">{
+    "tls": {
+        "verifyHost": false,
+        "verifyCertificates": false
+    }
+}</code></pre>
+<h3 id="mozilla">Mozilla</h3>
+<p>The Mozilla certificates are included by default to make fetching content from secure sites easy.</p>
+<pre><code class="language-json">{
+    "tls": {
+        "certificates": "mozilla"
+    }
+}</code></pre>
 <h2 id="advanced">Advanced</h2>
 <p>In addition to our Droplet, we can also use and interact with the <code>Client</code> manually. Here's how our default implementation in Vapor looks:</p>
 <pre><code class="language-swift">let response = try Client&lt;TCPClientStream&gt;.get("http://some-endpoint/mine")</code></pre>
@@ -322,12 +347,6 @@ public protocol ClientProtocol: Program, Responder {
 <pre><code class="language-swift">let drop = Droplet(client: MyCustomClient.self)</code></pre>
 <p>Going forward, all of your calls to <code>drop.client</code> will use <code>MyCustomClient.self</code>:</p>
 <pre><code class="language-swift">drop.client.get(... // uses `MyCustomClient`</code></pre>
-<h3 id="provider">Provider</h3>
-<p>We can also use Providers to inherit behavior in our application. For example, to add Linux compatible TLS to our application's <code>Client</code>, we might use this:</p>
-<pre><code class="language-swift">import VaporTLS
-
-let drop = Droplet(initializedProviders: [VaporTLS.Provider(.client)])</code></pre>
-<p>In the same way as above, this will now apply to all <code>drop.client</code> calls within our application.</p>
         </main>
 
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
