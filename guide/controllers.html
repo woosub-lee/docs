@@ -107,6 +107,11 @@
                                 Views
                             </a>
                         </li>
+                                            <li class="">
+                            <a href="https://vapor.github.io/documentation/guide/leaf.html">
+                                Leaf
+                            </a>
+                        </li>
                                             <li class="active">
                             <a href="https://vapor.github.io/documentation/guide/controllers.html">
                                 Controllers
@@ -280,7 +285,7 @@
 <h3 id="registering">Registering</h3>
 <p>The only required structure is the signature of each method in the controller. In order to register this method into the router, it must have a signature like <code>(Request) throws -&gt; ResponseRepresentable</code>. <code>Request</code> and <code>ResponseRepresentable</code> are made available by importing the <code>HTTP</code> module.</p>
 <pre><code class="language-swift">let hc = HelloController()
-drop.get("hello", hc.sayHello)</code></pre>
+drop.get("hello", handler: hc.sayHello)</code></pre>
 <p>Since the signature of our <code>sayHello</code> method matches the signature of the closure for the <code>drop.get</code> method, we can pass it directly.</p>
 <h3 id="type-safe">Type Safe</h3>
 <p>You can also use controller methods with type-safe routing.</p>
@@ -293,7 +298,7 @@ drop.get("hello", hc.sayHello)</code></pre>
 }</code></pre>
 <p>We add a new method called <code>sayHelloAlternate</code> to the <code>HelloController</code> that accepts a second parameter <code>name: String</code>.</p>
 <pre><code class="language-swift">let hc = HelloController()
-drop.get("hello", String.self, hc.sayHelloAlternate)</code></pre>
+drop.get("hello", String.self, handler: hc.sayHelloAlternate)</code></pre>
 <p>Since this type-safe <code>drop.get</code> accepts a signature <code>(Request, String) throws -&gt; ResponseRepresentable</code>, our method can now be used as the closure for this route. </p>
 <h2 id="resources">Resources</h2>
 <p>Controllers that conform to <code>ResourceRepresentable</code> can be easily registered into a router as a RESTful resource. Let's look at an example of a <code>UserController</code>.</p>
@@ -309,8 +314,8 @@ drop.get("hello", String.self, hc.sayHelloAlternate)</code></pre>
 <p>Here is a typical user controller with an <code>index</code> and <code>show</code> route. Indexing returns a JSON list of all users and showing returns a JSON representation of a single user.</p>
 <p>We <em>could</em> register the controller like so:</p>
 <pre><code class="language-swift">let users = UserController()
-drop.get("users", users.index)
-drop.get("users", User.self, users.show)</code></pre>
+drop.get("users", handler: users.index)
+drop.get("users", User.self, handler: users.show)</code></pre>
 <p>But <code>ResourceRepresentable</code> makes this standard RESTful structure easy.</p>
 <pre><code class="language-swift">extension UserController: ResourceRepresentable {
     func makeResource() -&gt; Resource&lt;User&gt; {

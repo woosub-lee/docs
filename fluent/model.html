@@ -108,6 +108,11 @@
                             </a>
                         </li>
                                             <li class="">
+                            <a href="https://vapor.github.io/documentation/guide/leaf.html">
+                                Leaf
+                            </a>
+                        </li>
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/guide/controllers.html">
                                 Controllers
                             </a>
@@ -265,7 +270,7 @@
         <main>
             <a href="https://github.com/vapor/documentation/blob/master/CONTRIBUTING.md" class="edit">✎ Edit on GitHub</a>
             <h1 id="model">Model</h1>
-<p><code>Model</code> is the base protocol for any of your application's models, especially those you want to persist. </p>
+<p><code>Model</code> is the base protocol for any of your application's models, especially those you want to persist.</p>
 <blockquote>
 <p><code>Model</code> is only available in Vapor, the Fluent equivalent is <code>Entity</code></p>
 </blockquote>
@@ -282,7 +287,7 @@
 <pre><code class="language-swift">import Vapor
 import Fluent</code></pre>
 <p>Then add the conformance to your class.</p>
-<pre><code class="language-swift">final class User: Model { 
+<pre><code class="language-swift">final class User: Model {
     ...
 }</code></pre>
 <p>The compiler will inform you that some methods need to be implemented to conform.</p>
@@ -301,7 +306,7 @@ import Fluent</code></pre>
     }
     ...
 }</code></pre>
-<p>The keys <code>id</code> and <code>name</code> are what we expect the columns or fields in the database to be named. The <code>extract</code> call is marked with a <code>try</code> because it will throw an error if the value is not present or is the wrong type. </p>
+<p>The keys <code>id</code> and <code>name</code> are what we expect the columns or fields in the database to be named. The <code>extract</code> call is marked with a <code>try</code> because it will throw an error if the value is not present or is the wrong type.</p>
 <h3 id="node-representable">Node Representable</h3>
 <p>Now that we have covered initializing the model, we need to show it how to save back into the database. Model uses <code>NodeRepresentable</code> to achieve this.</p>
 <pre><code class="language-swift">final class User: Model {
@@ -314,8 +319,11 @@ import Fluent</code></pre>
     ...
 }</code></pre>
 <p>When a <code>User</code> is saved, the <code>makeNode()</code> method will be called and the resulting <code>Node</code> will be saved to the database. The keys <code>id</code> and <code>name</code> are what we expect the columns or fields in the database to be named.</p>
+<blockquote>
+<p>In most of the cases you do not need to be concerned about <code>context</code> argument of the <code>makeNode(context:)</code> method. It’s a part of the protocol that allows extensibility in more advanced or specific scenarios.</p>
+</blockquote>
 <h2 id="preparations">Preparations</h2>
-<p>Some databases, like MySQL, need to be prepared for a new schema. In MySQL, this means creating a new table. </p>
+<p>Some databases, like MySQL, need to be prepared for a new schema. In MySQL, this means creating a new table.</p>
 <h3 id="prepare">Prepare</h3>
 <p>Let's assume we are using a SQL database. To prepare the database for our <code>User</code> class, we need to create a table. If you are using a database like Mongo, you can leave this method unimplemented.</p>
 <pre><code class="language-swift">final class User {
@@ -329,7 +337,7 @@ import Fluent</code></pre>
 }</code></pre>
 <p>Here we create a table named <code>users</code> that has an identifier field and a string field with the key <code>name</code>. This matches both our <code>init(node: Node)</code> and <code>makeNode() -&gt; Node</code> methods.</p>
 <h3 id="revert">Revert</h3>
-<p>An optional preparation reversion can be created. This will be run if <code>vapor run prepare --revert</code> is called. </p>
+<p>An optional preparation reversion can be created. This will be run if <code>vapor run prepare --revert</code> is called.</p>
 <pre><code class="language-swift">final class User {
     static func revert(_ database: Database) throws {
         try database.delete("users")
@@ -394,7 +402,7 @@ print(user.id) // prints the new id</code></pre>
 <pre><code class="language-swift">public protocol Model: Entity, JSONRepresentable, StringInitializable, ResponseRepresentable {}</code></pre>
 <p>As can be seen in the protocol, Vapor models can automatically convert to <code>JSON</code>, <code>Response</code>, and even be used in type-safe routing.</p>
 <h2 id="options">Options</h2>
-<p>Change the table/collection name </p>
+<p>Change the table/collection name</p>
 <pre><code class="language-swift">static var entity = "new_name"</code></pre>
         </main>
 

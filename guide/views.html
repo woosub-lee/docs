@@ -108,6 +108,11 @@
                             </a>
                         </li>
                                             <li class="">
+                            <a href="https://vapor.github.io/documentation/guide/leaf.html">
+                                Leaf
+                            </a>
+                        </li>
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/guide/controllers.html">
                                 Controllers
                             </a>
@@ -274,26 +279,21 @@
     return try drop.view.make("index.html")
 }</code></pre>
 <h2 id="templating">Templating</h2>
-<p>Templated documents like mustache or stencil templates can take a <code>Context</code>.</p>
+<p>Templated documents like <a href="./leaf.html">Leaf</a>, Mustache, or Stencil can take a <code>Context</code>.</p>
 <pre><code class="language-swift">drop.get("template") { request in
-    return try drop.view.make("index.template", [
+    return try drop.view.make("welcome", [
         "message": "Hello, world!"
     ])
 }</code></pre>
 <h2 id="public-resources">Public Resources</h2>
 <p>Any resources that your views need, such as images, styles, and scripts, should be placed in the <code>Public</code> folder at the root of your application.</p>
 <h2 id="view-renderer">View Renderer</h2>
-<p>Any class that conforms to <code>ViewRenderer</code> can be set to render views with a given context.</p>
-<pre><code class="language-swift">class MustacheRenderer: RenderDriver {
-    ...
-}
-
-View.renderers[".mustache"] = MustacheRenderer()</code></pre>
+<p>Any class that conforms to <code>ViewRenderer</code> can be added to our droplet. `Droplet(view: LeafRenderer())``</p>
 <h2 id="available-renderers">Available Renderers</h2>
 <p>These renderers can be added to your application through Providers.</p>
 <ul>
+<li><a href="https://github.com/vapor/leaf">Leaf</a></li>
 <li><a href="https://github.com/vapor/mustache-provider">Mustache</a></li>
-<li><a href="https://github.com/vapor/stencil-provider">Stencil</a></li>
 </ul>
         </main>
 

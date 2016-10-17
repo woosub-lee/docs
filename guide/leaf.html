@@ -107,7 +107,7 @@
                                 Views
                             </a>
                         </li>
-                                            <li class="">
+                                            <li class="active">
                             <a href="https://vapor.github.io/documentation/guide/leaf.html">
                                 Leaf
                             </a>
@@ -227,7 +227,7 @@
                             <section>
                     <h3>HTTP</h3>
                     <ul>
-                                            <li class="active">
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/http/request.html">
                                 Request
                             </a>
@@ -269,125 +269,97 @@
 
         <main>
             <a href="https://github.com/vapor/documentation/blob/master/CONTRIBUTING.md" class="edit">✎ Edit on GitHub</a>
-            <blockquote>
-<p>Module: <code>import HTTP</code></p>
-</blockquote>
-<h1 id="request">Request</h1>
-<p>The most common part of the <code>HTTP</code> library we'll be interacting with is the <code>Request</code> type. Here's a look at some of the most commonly used attributes in this type.</p>
-<pre><code class="language-swift">public var method: Method
-public var uri: URI
-public var parameters: Node
-public var headers: [HeaderKey: String]
-public var body: Body
-public var data: Content</code></pre>
-<h3 id="method">Method</h3>
-<p>The HTTP <code>Method</code> associated with the <code>Request</code>, ie: <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>.</p>
-<h3 id="uri">URI</h3>
-<p>The associated <code>URI</code> of the request. We will use this to access attributes about the <code>uri</code> the request was sent to.</p>
-<p>For example, given the following uri: <code>http://vapor.codes/example?query=hi#fragments-too</code></p>
-<pre><code class="language-swift">let scheme = request.uri.scheme // http
-let host = request.uri.host // vapor.codes
-
-let path = request.uri.path // /example
-let query = request.uri.query // query=hi
-let fragment = request.uri.fragment // fragments-too</code></pre>
-<h3 id="route-parameters">Route Parameters</h3>
-<p>The url parameters associated with the request. For example, if we have a path registered as <code>hello/:name/age/:age</code>, we would be able to access those in our request, like so:</p>
-<pre><code class="language-swift">let name = request.parameters["name"] // String?
-let age = request.parameters["age"]?.int // Int?</code></pre>
-<p>Or, to automatically throw on <code>nil</code> or invalid variable, you can also <code>extract</code></p>
-<pre><code class="language-swift">let name = try request.parameters.extract("name") as String
-let age = try request.parameters.extract("age") as Int</code></pre>
-<p>These extract functions can cast to any <code>NodeInitializable</code> type, including your own custom types. Make sure to check out <a href="https://github.com/vapor/node">Node</a> for more info.</p>
+            <h1 id="leaf">Leaf</h1>
+<p>Welcome to Leaf. Leaf's goal is to be a simple templating language that can make generating views easier. There's a lot of great templating languages, use what's best for you, maybe that's leaf! The goals of leaf are as follows:</p>
+<ul>
+<li>Small set of strictly enforced rules</li>
+<li>Consistency</li>
+<li>Parser first mentality</li>
+<li>Extensibility</li>
+</ul>
+<h2 id="syntax">Syntax</h2>
+<p>Leaf syntax is based around a single token, in this case, the hashtag: <code>#</code>.</p>
 <blockquote>
-<p>Note: Vapor also provides type safe routing in the routing section of our docs.</p>
+<p>It's important to note that <em>all</em> hashtags will be parsed, there is no escaping. Use <code>#()</code> to render a plain <code>#</code>. <code>#()Leaf</code> =&gt; <code>#Leaf</code>. Or, for larger sections, use the <code>raw</code> tag. <code>#raw() { #Do #whatever #you #want #to #in #here!. }</code></p>
 </blockquote>
-<h3 id="headers">Headers</h3>
-<p>These are the headers associated with the request. If you are preparing an outgoing request, this can be used to add your own keys.</p>
-<pre><code class="language-swift">let contentType = request.headers["Content-Type"]  </code></pre>
-<p>Or for outgoing requests:</p>
-<pre><code class="language-swift">let request = Request ...
-request.headers["Content-Type"] = "application/json"
-request.headers["Authorization"] = ... my auth token</code></pre>
-<h4 id="extending-headers">Extending Headers</h4>
-<p>We generally seek to improve code bases by removing stringly typed code where possible. We can add variables to the headers using generic extensions.</p>
-<pre><code class="language-swift">extension KeyAccessible where Key == HeaderKey, Value == String {
-    var customKey: String? {
-      get {
-        return self["Custom-Key"]
-      }
-      set {
-        self["Custom-Key"] = newValue
-      }
+<h3 id="structure">Structure</h3>
+<p>Here we see all the components of a Leaf tag.</p>
+<pre><code class="language-leaf">#someTag(parameter.list, goes, "here") {
+  This is an optional body here
+}</code></pre>
+<h5 id="token">Token</h5>
+<blockquote>
+<p>The <code>#</code> token will define we're a tag</p>
+</blockquote>
+<h5 id="name">Name</h5>
+<blockquote>
+<p>In above example, it would be <code>someTag</code>. While not strictly enforced, it is <strong>highly</strong> encouraged that users only use alphanumeric characters in names. This may be enforced in future versions.</p>
+</blockquote>
+<h5 id="parameter-list">Parameter List</h5>
+<p><code>Var(parameter, list), Var(goes), Const("here")</code></p>
+<h5 id="body">Body</h5>
+<blockquote>
+<p>This is an optional body here indicated w/ open and closed curly brackets.</p>
+</blockquote>
+<h4 id="using--in-html-with-leaf">Using # in html with Leaf</h4>
+<p>If you need # to appear alone in your html, simply using <code>#()</code> will render as #. Alternatively, the raw tag is available for larger sections of code:</p>
+<pre><code class="language-leaf">#raw() {
+   Do whatever w/ #'s here, this code
+   won't be rendered as leaf document.
+   It's a great place for things like Javascript or large HTML sections.
+}</code></pre>
+<h2 id="syntax-highlighting">Syntax Highlighting</h2>
+<h3 id="atom">Atom</h3>
+<p><a href="https://atom.io/packages/language-leaf">language-leaf</a> by ButkiewiczP</p>
+<h2 id="examples">Examples</h2>
+<h4 id="variable">Variable</h4>
+<p>Variables are added w/ just a number sign.</p>
+<pre><code class="language-leaf">Hello, #(name)!</code></pre>
+<h4 id="loop">Loop</h4>
+<p>Loop a variable</p>
+<pre><code class="language-leaf">#loop(friends, "friend") {
+  Hello, #(friend.name)!
+}</code></pre>
+<h4 id="if---else">If - Else</h4>
+<pre><code class="language-leaf">#if(entering) {
+  Hello, there!
+} ##if(leaving) {
+  Goodbye!
+} ##else() {
+  I've been here the whole time.
+}</code></pre>
+<h4 id="chaining">Chaining</h4>
+<p>The double token, <code>##</code> indicates a chain. If the previous tag fails, this tag will be given an opportunity to run. It can be applied to any standard tag, for example, above we chain to else, but we could also chain to loops.</p>
+<pre><code>#empty(friends) {
+    Try adding some friends!
+} ##loop(friends, "friend") {
+    &lt;li&gt; #(friend.name) &lt;/li&gt;
+}</code></pre>
+<h3 id="custom-tags">Custom Tags</h3>
+<p>Look at the existing tags for advanced scenarios, let's look at a basic example by creating <code>Index</code> together. This tag will take two arguments, an array, and an index to access.</p>
+<pre><code>class Index: BasicTag {
+    let name = "index"
+
+    func run(arguments: [Argument]) throws -&gt; Node? {
+        guard
+            arguments.count == 2,
+            let array = arguments[0].value?.nodeArray,
+            let index = arguments[1].value?.int,
+            index &lt; array.count
+            else { return nil }
+        return array[index]
     }
 }</code></pre>
-<p>With this pattern implemented, our string <code>"Custom-Key"</code> is contained in one section of our code. We can now access like this:</p>
-<pre><code class="language-swift">let customKey = request.headers.customKey
-
-// or
-
-let request = ...
-request.headers.customKey = "my custom value"</code></pre>
-<h3 id="body">Body</h3>
-<p>This is the body associated with the request and represents the general data payload. You can view more about body in the associated <a href="./body.html">docs</a></p>
-<p>For incoming requests, we'll often pull out the associated bytes like so:</p>
-<pre><code class="language-swift">let rawBytes = request.body.bytes</code></pre>
-<h2 id="content">Content</h2>
-<p>Generally when we're sending or receiving requests, we're using them as a way to transport content. For this, Vapor provides a convenient <code>data</code> variable associated with the request that prioritizes content in a consistent way.</p>
-<p>For example, say I receive a request to <code>http://vapor.codes?hello=world</code>.</p>
-<pre><code class="language-swift">let world = request.data["hello"]?.string</code></pre>
-<p>This same code will work if I receive a JSON request, for example:</p>
-<pre><code class="language-json">{
-  "hello": "world"
+<p>Now, after creating our <code>Stem</code>, we can register the tag:</p>
+<pre><code>stem.register(Index())</code></pre>
+<p>And use it like so:</p>
+<pre><code>Hello, #index(friends, "0")!</code></pre>
+<p>We can also chain <code>else</code> to this like we did earlier if we want to check existence first:</p>
+<pre><code>#index(friends, "0") {
+    Hello, #(self)!
+} ##else() {
+    Nobody's there!
 }</code></pre>
-<p>Will still be accessible through data.</p>
-<pre><code class="language-swift">let world = request.data["hello"]?.string</code></pre>
-<blockquote>
-<p>Note: Force unwrap should never be used.</p>
-</blockquote>
-<p>This also applies to multi-part requests and can even be extended to new types such as XML or YAML through middleware.</p>
-<p>If you'd prefer to access given types more explicitly, that's totally fine. The <code>data</code> variable is purely opt-in convenience for those who want it.</p>
-<h2 id="json">JSON</h2>
-<p>To access JSON directly on a given request, use the following:</p>
-<pre><code class="language-swift">let json = request.json["hello"]</code></pre>
-<h2 id="query-parameters">Query Parameters</h2>
-<p>The same applies to query convenience:</p>
-<pre><code class="language-swift">let query = request.query?["hello"]  // String?
-let name = request.query?["name"]?.string // String?
-let age = request.query?["age"]?.int // Int?
-let rating = request.query?["rating"]?.double // Double?</code></pre>
-<h2 id="key-paths">Key Paths</h2>
-<p>Key paths work on most Vapor types that can have nested key value objects. Here's a couple examples of how to access given the following json:</p>
-<pre><code class="language-json">{
-  "metadata": "some metadata",
-  "artists" : {
-    "href": "http://someurl.com",
-    "items": [
-      {
-        "name": "Van Gogh",
-      },
-      {
-        "name": "Mozart"
-      }
-    ]
-  }
-}</code></pre>
-<p>We could access the data in the following ways:</p>
-<h3 id="metadata">Metadata</h3>
-<p>Access top level values</p>
-<pre><code class="language-swift">let type = request.data["metadata"].string // "some metadata"</code></pre>
-<h3 id="items">Items</h3>
-<p>Access nested values</p>
-<pre><code class="language-swift">let items = request.data["artists", "items"] // [["name": "Van Gogh"], ["name": "Mozart"]]</code></pre>
-<h3 id="mixing-arrays-and-objects">Mixing Arrays and Objects</h3>
-<p>Get first artists</p>
-<pre><code class="language-swift">let first = request.data["artists", "items", 0] // ["name": "Van Gogh"]</code></pre>
-<h3 id="array-item">Array Item</h3>
-<p>Get key from array item</p>
-<pre><code class="language-swift">let firstName = request.data["artists", "items", 0, "name"] // "Van Gogh"</code></pre>
-<h3 id="array-comprehension">Array Comprehension</h3>
-<p>We can also smartly map an array of keys, for example, to just get the names of all of the artists, we could use the following</p>
-<pre><code class="language-swift">let names = request.data["artists", "items", "name"] // ["Van Gogh", "Mozart"]</code></pre>
         </main>
 
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

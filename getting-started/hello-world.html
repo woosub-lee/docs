@@ -108,6 +108,11 @@
                             </a>
                         </li>
                                             <li class="">
+                            <a href="https://vapor.github.io/documentation/guide/leaf.html">
+                                Leaf
+                            </a>
+                        </li>
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/guide/controllers.html">
                                 Controllers
                             </a>
@@ -274,19 +279,21 @@
 <pre><code class="language-sh">vapor new Hello</code></pre>
 <p>Vapor's folder structure will probably look familiar to you if you have worked with other web frameworks.</p>
 <pre><code>.
-├── App
-│   └── Controllers
-│   └── Middleware
-│   └── Models
-│   └── main.swift
+├── Sources
+│   └── App
+│       └── Controllers
+│       └── Middleware
+│       └── Models
+│       └── main.swift
 ├── Public
 ├── Resources
 │   └── Views
 └── Package.swift</code></pre>
 <p>For our Hello, World project, we will be focusing on the <code>main.swift</code> file.</p>
 <pre><code>.
-└── App
-    └── main.swift</code></pre>
+└── Sources
+    └── App
+        └── main.swift</code></pre>
 <p>Note: The <code>vapor new</code> command creates a new project with examples and comments about how to use the framework. You can delete these if you want.</p>
 <h2 id="droplet">Droplet</h2>
 <p>Look for the following line in the <code>main.swift</code> file.</p>

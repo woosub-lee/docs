@@ -108,6 +108,11 @@
                             </a>
                         </li>
                                             <li class="">
+                            <a href="https://vapor.github.io/documentation/guide/leaf.html">
+                                Leaf
+                            </a>
+                        </li>
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/guide/controllers.html">
                                 Controllers
                             </a>
@@ -273,11 +278,11 @@
 }</code></pre>
 <p>This creates a route that matches <code>users/:id</code> where the <code>:id</code> is an <code>Int</code>. Here's what it would look like using manual route parameters.</p>
 <pre><code class="language-swift">drop.get("users", ":id") { request in
-    guard let userId = request.parameters["id"].int else {
-        throw Abort.badRequest
-    }
+  guard let userId = request.parameters["id"].int else {
+    throw Abort.badRequest
+  }
 
-    return "You requested User #\(userId)"
+  return "You requested User #\(userId)"
 }</code></pre>
 <p>Here you can see that type safe routing saves ~3 lines of code and also prevents runtime errors like misspelling <code>:id</code>.</p>
 <h2 id="string-initializable">String Initializable</h2>
@@ -290,14 +295,14 @@
 <p><code>String</code> is the most generic and always matches. <code>Int</code> only matches when the string supplied can be turned into an integer. <code>Model</code> only matches when the string, used as an identifier, can be used to find the model in the database.</p>
 <p>Our previous example with users can be further simplified.</p>
 <pre><code class="language-swift">drop.get("users", User.self) { request, user in
-    return "You requested \(user.name)"
+  return "You requested \(user.name)"
 }</code></pre>
 <p>Here the identifier supplied is automatically used to lookup a user. For example, if <code>/users/5</code> is requested, the <code>User</code> model will be asked for a user with identifier <code>5</code>. If one is found, the request succeeds and the closure is called. If not, a not found error is thrown.</p>
 <p>Here is what this would look like if model didn't conform to <code>StringInitializable</code>.</p>
 <pre><code class="language-swift">drop.get("users", Int.self) { request, userId in
-    guard let user = try User.find(userId) else {
-        throw Abort.notFound
-    }
+  guard let user = try User.find(userId) else {
+    throw Abort.notFound
+  }
 
     return "You requested User #\(userId)"
 }</code></pre>
@@ -321,20 +326,23 @@
 <h3 id="limits">Limits</h3>
 <p>Type safe routing is currently limited to three path parts. This is usually remedied by adding route <a href="group.html">groups</a>.</p>
 <pre><code class="language-swift">drop.group("v1", "users") { users in
-    users.get(User.self, "posts", Post.self) { request, user, post in
-        return "Requested \(post.name) for \(user.name)"
-    }
+  users.get(User.self, "posts", Post.self) { request, user, post in
+    return "Requested \(post.name) for \(user.name)"
+  }
 }</code></pre>
 <p>The resulting path for the above example is <code>/v1/users/:userId/posts/:postId</code>. If you are clamoring for more type safe routing, please let us know and we can look into increasing the limit of three.</p>
 <h2 id="manual">Manual</h2>
 <p>As shown briefly above, you are still free to do traditional routing. This can be useful for especially complex situations.</p>
 <pre><code class="language-swift">drop.get("v1", "users", ":userId", "posts", ":postId", "comments": ":commentId") { request in
-    let userId = try request.parameters.extract("userId") as Int
-    let postId = try request.parameters.extract("postId") as Int
-    let commentId = try request.parameters.extract("commentId") as Int
+  let userId = try request.parameters.extract("userId") as Int
+  let postId = try request.parameters.extract("postId") as Int
+  let commentId = try request.parameters.extract("commentId") as Int
 
-    return "You requested comment #\(commentId) for post #\(postId) for user #\(userId)"
+  return "You requested comment #\(commentId) for post #\(postId) for user #\(userId)"
 }</code></pre>
+<blockquote>
+<p>Property <code>request.parameters</code> is used to extract parameters encoded in the URI <em>path</em> (for example, <code>/v1/users/1</code> has a parameter <code>:userId</code> equal to <code>"1"</code>). In case of parameters passed as a part of a <em>query</em> (e.g. <code>/v1/search-user?userId=1</code>), the <code>request.data</code> should be used (e.g. <code>let userId = request.data["userId"]?.string</code>).</p>
+</blockquote>
 <p>Request parameters can be accessed either as a dictionary or using the <code>extract</code> syntax which throws instead of returning an optional.</p>
 <h3 id="groups">Groups</h3>
 <p>Manual request parameters also work with <a href="group.html">groups</a>.</p>
