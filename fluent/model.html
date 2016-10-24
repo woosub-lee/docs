@@ -467,6 +467,11 @@ print(user.id) // prints the new id</code></pre>
                     }
                 });
 
+                // scroll to the active nav item
+                $("nav .scroll").animate({ 
+                    scrollTop: $("nav .active").offset().top - 157
+                }, 0);
+
                 // var lastScrollTop = 0;
                 // $(window).scroll(function(event){
                 //    var st = $(this).scrollTop();
