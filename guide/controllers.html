@@ -326,7 +326,7 @@ drop.get("users", User.self, handler: users.show)</code></pre>
     }
 }</code></pre>
 <p>Conforming <code>UserController</code> to <code>ResourceRepresentable</code> requires that the signatures of the <code>index</code> and <code>show</code> methods match what the <code>Resource&lt;User&gt;</code> is expecting.</p>
-<p>Here is a peak into the <code>Resource</code> class.</p>
+<p>Here is a peek into the <code>Resource</code> class.</p>
 <pre><code class="language-swift">final class Resource&lt;Model: StringInitializable&gt; {
     typealias Multiple = (Request) throws -&gt; ResponseRepresentable
     typealias Item = (Request, Model) throws -&gt; ResponseRepresentable
