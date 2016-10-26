@@ -284,18 +284,8 @@
     }
 }</code></pre>
 <p>We then supply this middleware to our <code>Droplet</code>.</p>
-<pre><code class="language-swift">let drop = Droplet(availableMiddleware: [
-    "version": VersionMiddleware()
-])</code></pre>
-<h2 id="middlewarejson">Middleware.json</h2>
-<p>Once the middleware has been supplied, enable it in your <code>Config/middleware.json</code> file.</p>
-<pre><code class="language-json">{
-    "server": [
-        ...
-        "version"
-    ],
-    ...
-}</code></pre>
+<pre><code class="language-swift">let drop = Droplet()
+drop.middleware.append(VersionMiddleware())</code></pre>
 <p>You can imagine our <code>VersionMiddleware</code> sitting in the middle of a chain that connects the client and our server. Every request and response that hits our server must go through this chain of middleware.</p>
 <p><img src="https://cloud.githubusercontent.com/assets/1342803/17382676/0b51d6d6-59a0-11e6-9cbb-7585b9ab9803.png" alt="Middleware" /></p>
 <h2 id="breakdown">Breakdown</h2>
