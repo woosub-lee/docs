@@ -344,7 +344,7 @@ pets_toys
     }
 }</code></pre>
 <p>And the opposite for <code>Toy</code>.</p>
-<pre><code>extension Toy {
+<pre><code class="language-swift">extension Toy {
     func pets() throws -&gt; Siblings&lt;Pet&gt; {
         return try siblings()
     }
@@ -352,6 +352,17 @@ pets_toys
 <p>Now you are free to query pets and toys similarly to children.</p>
 <pre><code class="language-swift">let pet: Pet = ...
 let toys = pet.toys().all()</code></pre>
+<p>To create a new many-to-many relationship you can do the following.</p>
+<pre><code class="language-swift">
+var toy: Toy = ...                      // Create a new toy
+try toy.save()                          // Save the toy to the db
+
+var pet: Pet = ...                      // Create a new pet
+try pet.save()                          // Save the pet to the db
+
+// Link them together in the db
+var pivot = Pivot&lt;Toy, Pet&gt;(toy, pet)   // Create the relationship
+try pivot.save()                        // Save the relationship to the db</code></pre>
 <h3 id="preparation">Preparation</h3>
 <p>To prepare for a relationship with a <code>Pivot</code>, simply add the pivot to the <code>Droplet</code>'s preparations.</p>
 <pre><code class="language-swift">let drop = Droplet(preparations: [
