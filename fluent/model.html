@@ -347,7 +347,12 @@ import Fluent</code></pre>
 <p>Here we are deleting the table named <code>users</code>.</p>
 <h3 id="droplet">Droplet</h3>
 <p>To run these prepations when the applications boots, you must add the Model to the <code>Droplet</code>.</p>
-<pre><code class="language-swift">let drop = Droplet(preparations: [User.self])</code></pre>
+<pre><code class="language-swift">let drop = Droplet()
+
+drop.preparations.append(User.self)</code></pre>
+<blockquote>
+<p>Note: Preparations must be appended before the Droplet is run.</p>
+</blockquote>
 <h2 id="full-model">Full Model</h2>
 <p>This is what our final <code>User</code> model looks like:</p>
 <pre><code class="language-swift">import Vapor

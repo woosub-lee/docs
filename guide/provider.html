@@ -292,7 +292,9 @@
 <pre><code class="language-swift">import Vapor
 import VaporMySQL
 
-let drop = Droplet(providers: [VaporMySQL.Provider.self])
+let drop = Droplet()
+
+try drop.addProvider(VaporMySQL.Provider.self)
 
 // ...
 
@@ -308,13 +310,14 @@ drop.run()</code></pre>
 }</code></pre>
 <p>You will receive an error during the <code>Droplet</code>'s initialization if a configuration file is required.</p>
 <h2 id="advanced">Advanced</h2>
-<p>You may choose to initialize the provider yourself. If you do, simply use the <code>initializedProvider</code> array instead.</p>
+<p>You may choose to initialize the provider yourself. </p>
 <pre><code class="language-swift">import Vapor
 import VaporMySQL
 
-let mysql = VaporMySQL.Provider(host: "localhost", user: "root")
+let drop = Droplet()
 
-let drop = Droplet(initializedProviders: [mysql])
+let mysql = VaporMySQL.Provider(host: "localhost", user: "root")
+try drop.addProvider(mysql)
 
 ...
 

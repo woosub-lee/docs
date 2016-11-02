@@ -349,7 +349,9 @@ public protocol ClientProtocol: Program, Responder {
 <h2 id="customize-droplet">Customize Droplet</h2>
 <p>If we've introduced a custom conformance to <code>HTTP.ClientProtocol</code>, we can pass this into our droplet without changing the underlying behavior in our application.</p>
 <p>For example:</p>
-<pre><code class="language-swift">let drop = Droplet(client: MyCustomClient.self)</code></pre>
+<pre><code class="language-swift">let drop = Droplet()
+
+drop.client = MyCustomClient.self</code></pre>
 <p>Going forward, all of your calls to <code>drop.client</code> will use <code>MyCustomClient.self</code>:</p>
 <pre><code class="language-swift">drop.client.get(... // uses `MyCustomClient`</code></pre>
         </main>

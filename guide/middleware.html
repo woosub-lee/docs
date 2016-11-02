@@ -344,6 +344,30 @@ drop.middleware.append(VersionMiddleware())</code></pre>
     // continue with Foo object
 }</code></pre>
 <p>Interestingly, this is how <code>Abort</code> itself is implemented in Vapor. <code>AbortMiddleware</code> catches any <code>Abort</code> errors and returns a JSON response. Should you want to customize how <code>Abort</code> errors appear, you can remove this middleware and add your own.</p>
+<h2 id="configuration">Configuration</h2>
+<p>Appending middleware ot the <code>drop.middleware</code> array is the simplest way to add middleware--it will be used every time the application starts.</p>
+<p>You can also use the <a href="config.html">configuration</a> files to enabled or disable middleware for more control. This is especially useful if you have middleware that should, for example, run only in production.</p>
+<p>Appending configurable middleware looks like the following:</p>
+<pre><code class="language-swift">let drop = Droplet()
+drop.addConfigurable(middleware: myMiddleware, name: "my-middleware")</code></pre>
+<p>Then, in the <code>Config/droplet.json</code> file, add <code>my-middleware</code> to the appropriate <code>middleware</code> array.</p>
+<pre><code class="language-json">{
+    ...
+    "middleware": {
+        "server": [
+            ...
+            "my-middleware",
+            ...
+        ],
+        "client": [
+            ...
+        ]
+    },
+    ...
+}</code></pre>
+<p>If the name of the added middleware appears in the <code>server</code> array for the loaded configuration, it will be added to the server's middleware when the application boots.</p>
+<p>Likewise, if the middleware appears in the <code>client</code> array for the loaded configuration, it will be added to the client's middleware.</p>
+<p>One middleware can be appended to both the Client and the Server, and can be added multiple times. The ordering of middleware is respected.</p>
 <h2 id="extensions-advanced">Extensions (Advanced)</h2>
 <p>Middleware pairs great with request/response extensions and storage.</p>
 <pre><code class="language-swift">final class PokemonMiddleware: Middleware {

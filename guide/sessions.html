@@ -278,8 +278,11 @@
 let memory = MemorySessions()
 let sessions = SessionsMiddleware(sessions: memory)</code></pre>
 <p>Then add to the <code>Droplet</code>.</p>
-<pre><code>let drop = Droplet(availableMiddleware: ["sessions": sessions])</code></pre>
-<p>Once you've added the <code>SessionsMiddleware</code> to the available middleware dictionary, make sure to enable it in your <a href="../guide/middleware.html">middleware.json</a> configuration file.</p>
+<pre><code>let drop = Droplet()
+drop.middleware.append(sessions)</code></pre>
+<blockquote>
+<p>Note: If you'd like to enable or disable the middleware based on config files, check out <a href="../guide/middleware.html">middleware</a>.</p>
+</blockquote>
 <h2 id="request">Request</h2>
 <p>After <code>SessionMiddleware</code> has been enabled, you can access the <code>req.sessions()</code> method to get access to session data.</p>
 <pre><code class="language-swift">let data = try req.session().data</code></pre>

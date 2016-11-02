@@ -309,15 +309,23 @@ let auth = AuthMiddleware(user: User.self, realm: facebook)</code></pre>
 </blockquote>
 <h2 id="add">Add</h2>
 <p>Once you've created the <code>AuthMiddleware</code>, you can add it to the <code>Droplet</code>.</p>
-<pre><code class="language-swift">let drop = Droplet(availableMiddleware: ["auth": auth])</code></pre>
-<p>Once you've added the <code>AuthMiddleware</code> to the available middleware dictionary, make sure to enable it in your <a href="../guide/middleware.html">middleware.json</a> configuration file.</p>
+<pre><code class="language-swift">let drop = Droplet()
+drop.middleware.append(auth)</code></pre>
+<blockquote>
+<p>Note: If you'd like to enable or disable the middleware based on config files, check out <a href="../guide/middleware.html">middleware</a>.</p>
+</blockquote>
 <h3 id="sharing-cache">Sharing Cache</h3>
 <p>If you'd like the <code>Droplet</code> and the <code>AuthMiddleware</code> to share the same <code>CacheProtocol</code>, pass the same instance to both.</p>
-<pre><code>import VaporRedis
+<pre><code>import Vapor
+import VaporRedis
 
 let redis = RedisCache()
 let auth = AuthMiddleware(user: User.self, cache: redis)
-let drop = Droplet(cache: redis, availableMiddleware: ["auth": auth])</code></pre>
+
+let drop = Droplet()
+
+drop.cache = redis
+drop.middleware.append(auth)</code></pre>
         </main>
 
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

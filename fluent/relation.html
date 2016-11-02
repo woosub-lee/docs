@@ -365,11 +365,12 @@ var pivot = Pivot&lt;Toy, Pet&gt;(toy, pet)   // Create the relationship
 try pivot.save()                        // Save the relationship to the db</code></pre>
 <h3 id="preparation">Preparation</h3>
 <p>To prepare for a relationship with a <code>Pivot</code>, simply add the pivot to the <code>Droplet</code>'s preparations.</p>
-<pre><code class="language-swift">let drop = Droplet(preparations: [
+<pre><code class="language-swift">let drop = Droplet()
+drop.preparations += [
     Toy.self,
     Pet.self,
     Pivot&lt;Toy, Pet&gt;.self
-])</code></pre>
+]</code></pre>
         </main>
 
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

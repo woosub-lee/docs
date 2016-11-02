@@ -288,7 +288,10 @@
 <h2 id="public-resources">Public Resources</h2>
 <p>Any resources that your views need, such as images, styles, and scripts, should be placed in the <code>Public</code> folder at the root of your application.</p>
 <h2 id="view-renderer">View Renderer</h2>
-<p>Any class that conforms to <code>ViewRenderer</code> can be added to our droplet. `Droplet(view: LeafRenderer())``</p>
+<p>Any class that conforms to <code>ViewRenderer</code> can be added to our droplet. </p>
+<pre><code class="language-swift">let drop = Droplet()
+
+drop.view = LeafRenderer(viewsDir: drop.viewsDir)</code></pre>
 <h2 id="available-renderers">Available Renderers</h2>
 <p>These renderers can be added to your application through Providers.</p>
 <ul>
