@@ -207,7 +207,7 @@
                                 User
                             </a>
                         </li>
-                                            <li class="active">
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/auth/middleware.html">
                                 Middleware
                             </a>
@@ -267,7 +267,7 @@
                             <section>
                     <h3>WebSockets</h3>
                     <ul>
-                                            <li class="">
+                                            <li class="active">
                             <a href="https://vapor.github.io/documentation/websockets/droplet.html">
                                 Droplet
                             </a>
@@ -284,63 +284,48 @@
 
         <main>
             <a href="https://github.com/vapor/documentation/blob/master/CONTRIBUTING.md" class="edit">✎ Edit on GitHub</a>
-            <h1 id="middleware">Middleware</h1>
-<p><code>AuthMiddleware</code> is at the core of adding authorization to your project. It is responsible for initializing dependencies, checking credentials, and handling sessions.</p>
-<h2 id="create">Create</h2>
-<p>Once you have something that conforms to <code>Auth.User</code>, you can create an <code>AuthMiddleware</code>. Let's assume we have a class <code>User</code> that conforms to <code>Auth.User</code>.</p>
-<blockquote>
-<p>Note: You may need to include a module name before <code>User</code> to disambiguate. </p>
-</blockquote>
-<pre><code class="language-swift">import Auth
-
-let auth = AuthMiddleware(user: User.self)</code></pre>
-<p>Creating the <code>AuthMiddleware</code> can be that simple, or you can customize it with additional initialization arguments.</p>
-<h3 id="cookie">Cookie</h3>
-<p>Customize the type of cookie the <code>AuthMiddleware</code> creates by passing a <code>CookieFactory</code>.</p>
-<pre><code class="language-swift">let auth = AuthMiddleware(user: User.self) { value in
-    return Cookie(
-        name: "vapor-auth",
-        value: value,
-        expires: Date().addingTimeInterval(60 * 60 * 5), // 5 hours
-        secure: true,
-        httpOnly: true
-    )
-}</code></pre>
-<h3 id="cache">Cache</h3>
-<p>A custom <code>CacheProtocol</code> can be passed as well. The <code>MemoryCache</code> used by default is not persisted between server restarts and does not allow for sharing between multiple running instances.</p>
-<pre><code class="language-swift">import VaporRedis
-
-let redis = RedisCache()
-let auth = AuthMiddleware(user: User.self, cache: redis)</code></pre>
-<blockquote>
-<p>Note: This example uses the <a href="https://github.com/vapor/redis-provider">redis-provider</a> package.</p>
-</blockquote>
-<h3 id="realm">Realm</h3>
-<p>To customize the <code>AuthMiddleware</code> even further, you can use a custom <code>Realm</code>. The <code>Realm</code> takes the responsibility of registering and authenticating the user away from the <code>Auth.User</code> protocol. </p>
-<pre><code class="language-swift">let facebook = FacebookRealm()
-let auth = AuthMiddleware(user: User.self, realm: facebook)</code></pre>
-<blockquote>
-<p>Note: <code>FacebookRealm</code> is hypothetical.</p>
-</blockquote>
-<h2 id="add">Add</h2>
-<p>Once you've created the <code>AuthMiddleware</code>, you can add it to the <code>Droplet</code>.</p>
-<pre><code class="language-swift">let drop = Droplet()
-drop.middleware.append(auth)</code></pre>
-<blockquote>
-<p>Note: If you'd like to enable or disable the middleware based on config files, check out <a href="../guide/middleware.html">middleware</a>.</p>
-</blockquote>
-<h3 id="sharing-cache">Sharing Cache</h3>
-<p>If you'd like the <code>Droplet</code> and the <code>AuthMiddleware</code> to share the same <code>CacheProtocol</code>, pass the same instance to both.</p>
-<pre><code>import Vapor
-import VaporRedis
-
-let redis = RedisCache()
-let auth = AuthMiddleware(user: User.self, cache: redis)
+            <h1 id="droplet-websockets">Droplet WebSockets</h1>
+<p>Creating a WebSocket server with the Droplet is easy. WebSockets work by upgrading an HTTP request to a WebSocket connection.</p>
+<p>Because of this, you should pick a URL for your WebSocket server to reside at. In this case, we use <code>/ws</code>.</p>
+<pre><code class="language-swift">import Vapor
 
 let drop = Droplet()
 
-drop.cache = redis
-drop.middleware.append(auth)</code></pre>
+drop.socket("ws") { req, ws in
+    print("New WebSocket connected: \(ws)")
+
+    // ping the socket to keep it open
+    try background {
+        if ws.state == .open {
+            try? ws.ping()
+            drop.console.wait(seconds: 10) // every 10 seconds
+        }
+    }
+
+    ws.onText = { ws, text in
+        print("Text received: \(text)")
+
+        // reverse the characters and send back
+        let rev = String(text.characters.reversed())
+        try ws.send(rev.bytes)
+    }
+
+    ws.onClose = { ws, code, reason, clean in
+        print("Closed.")
+    }
+}
+
+drop.run()</code></pre>
+<p>To connect with a WebSocket client, you would open a connection to <code>ws://&lt;ip&gt;/ws</code>.</p>
+<p>Here is an example using JavaScript.</p>
+<pre><code class="language-swift">var ws = new WebSocket("ws://0.0.0.0:8080/ws")
+
+ws.onmessage = function(msg) {
+    console.log(msg)
+}
+
+ws.send("test")</code></pre>
+<p>The above will log <code>tset</code> (<code>test</code> reversed).</p>
         </main>
 
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
