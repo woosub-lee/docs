@@ -202,7 +202,7 @@
                             <section>
                     <h3>Auth</h3>
                     <ul>
-                                            <li class="active">
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/auth/user.html">
                                 User
                             </a>
@@ -297,7 +297,7 @@
                                 Nginx
                             </a>
                         </li>
-                                            <li class="">
+                                            <li class="active">
                             <a href="https://vapor.github.io/documentation/deploy/supervisor.html">
                                 Supervisor
                             </a>
@@ -309,91 +309,39 @@
 
         <main>
             <a href="https://github.com/vapor/documentation/blob/master/CONTRIBUTING.md" class="edit">✎ Edit on GitHub</a>
-            <h1 id="auth">Auth</h1>
-<p>Authentication and authorization is focused around the <code>Auth.User</code> protocol. Authentication is analagous to asking: &quot;Who is this?&quot;, while authorization is analagous to asking: &quot;What can they do?&quot;. Vapor includes an extensible authentication system that you can use as a base for more sophisticated authorization.</p>
+            <h1 id="supervisor">Supervisor</h1>
+<p><a href="http://supervisord.org">Supervisor</a> is a process control system that makes it easy to start, stop, and restart your Vapor app.</p>
+<h2 id="install">Install</h2>
+<pre><code class="language-sh">sudo apt-get update
+sudo apt-get install supervisor</code></pre>
+<h2 id="configure">Configure</h2>
+<p>Each Vapor app on your server should have its own configuration file. For an example <code>Hello</code> project, the configuration file would be located at <code>/etc/supervisor/conf.d/hello.conf</code></p>
+<pre><code class="language-sh">[program:hello]
+command=/home/vapor/hello/.build/release/App serve --env=production
+directory=/home/vapor/hello/
+user=www-data
+stdout_logfile=/var/log/supervisor/%(program_name)-stdout.log
+stderr_logfile=/var/log/supervisor/%(program_name)-stderr.log</code></pre>
+<p>As specified in our configuration file the <code>Hello</code> project is located in the home folder for the user <code>vapor</code>. Make sure <code>directory</code> points to the root directory of your project where the <code>Config/</code> folder is.</p>
+<p>The <code>--env=production</code> flag will disable verbose logging and prioritize the <code>Config/production</code> sub folder of your configuration files.</p>
+<h3 id="environment">Environment</h3>
+<p>You can export variables to your Vapor app with sueprvisor.</p>
+<pre><code class="language-sh">environment=PORT=8123</code></pre>
+<p>Exported variables can be used in Vapor's configuration files with the <code>$</code> prefix.</p>
+<p><code>Config/production/servers.json</code></p>
+<pre><code class="language-json">{
+    "my-server": {
+        "port": "$PORT"
+    }
+}</code></pre>
+<p>The above config file will start a server named <code>my-server</code> on the port number exported by supervisor. This is a great way to control how Vapor starts from the supervisor config scripts. Feel free to name the server whatever you like.</p>
+<h2 id="start">Start</h2>
+<p>You can now load and start your app.</p>
+<pre><code class="language-sh">supervisorctl reread
+supervisorctl add hello
+supervisorctl start hello</code></pre>
 <blockquote>
-<p>Note: An <a href="https://github.com/vapor/auth-example">auth-example</a> project is available on GitHub.</p>
-</blockquote>
-<h2 id="user-protocol">User Protocol</h2>
-<p>Any type can conform to the <code>Auth.User</code> protocol, but they are commonly added onto Fluent <code>Model</code>s.</p>
-<pre><code class="language-swift">import Vapor
-import Auth
-
-final class User: Model {
-    var id: Node?
-    var name: String
-
-    ...
-}
-
-extension User: Auth.User {
-    static func authenticate(credentials: Credentials) throws -&gt; Auth.User {
-
-    }
-
-    static func register(credentials: Credentials) throws -&gt; Auth.User {
-
-    }
-}</code></pre>
-<p>Here is an example <code>User</code> class with the <code>Auth.User</code> protocol requirements stubbed. Note that the name of our class and the protocol are the same. This is why we use the <code>Auth.</code> prefix to differentiate the protocol from the <code>Auth</code> module from our <code>User</code> class.</p>
-<h3 id="authenticate">Authenticate</h3>
-<p>A user is authenticated when a set of credentials is passed to the static <code>authenticate</code> method and the matching user is returned.</p>
-<h4 id="credentials">Credentials</h4>
-<pre><code class="language-swift">protocol Credentials { }</code></pre>
-<p>The credentials protocol is an empty protocol that any type can conform to. This gives great flexibility to your authentication model, but also requires that you properly handle the case of unsupported credential types.</p>
-<h4 id="access-token">Access Token</h4>
-<p>One of the simplest credential types included is <code>AccessToken</code>. It carries a <code>String</code> based token that will be used to authenticate the user.</p>
-<p>Let's look at how we might support the access token type.</p>
-<pre><code class="language-swift">static func authenticate(credentials: Credentials) throws -&gt; Auth.User {
-    switch credentials {
-    case let accessToken as AccessToken:
-        guard let user = try User.query().filter("access_token", accessToken.string).first() else {
-            throw Abort.custom(status: .forbidden, message: "Invalid access token.")    
-        }
-
-        return user
-    default:
-        let type = type(of: credentials)
-        throw Abort.custom(status: .forbidden, message: "Unsupported credential type: \(type).")
-    }
-}</code></pre>
-<p>The first step is to cast the credentials to the type we want to support--in this case, <code>AccessToken</code>. If we do not have an access token, we will inform the client that the credentials are invalid.</p>
-<p>Once we have the access token, we will use it to query the <code>User</code> model for an entry with a matching access token. This is assuming the <code>users</code> table or collection has the access tokens stored on it. You may opt to store them somewhere else.</p>
-<p>Once we have found the user associated with the supplied access token, we simply return it.</p>
-<h4 id="identifier">Identifier</h4>
-<p>Vapor uses the <code>Identifier</code> credential type internally to lookup users from sessions. You can read more in the <a href="request.html">Request</a> section.</p>
-<h3 id="register">Register</h3>
-<p>Similar to the authenticate method, the register method takes credentials. But instead of fetching the user from the data store, it provides a convenient way to create the user. You are not required to register your users through this method.</p>
-<h2 id="example">Example</h2>
-<p>Here is an example of a User that supports multiple credentials.</p>
-<pre><code class="language-swift">extension User: Auth.User {
-    static func authenticate(credentials: Credentials) throws -&gt; Auth.User {
-        let user: User?
-
-        switch credentials {
-        case let id as Identifier:
-            user = try User.find(id.id)
-        case let accessToken as AccessToken:
-            user = try User.query().filter("access_token", accessToken.string).first()
-        case let apiKey as APIKey:
-            user = try User.query().filter("email", apiKey.id).filter("password", apiKey.secret).first()
-        default:
-            throw Abort.custom(status: .badRequest, message: "Invalid credentials.")
-        }
-
-        guard let u = user else {
-            throw Abort.custom(status: .badRequest, message: "User not found.")
-        }
-
-        return u
-    }
-
-    static func register(credentials: Credentials) throws -&gt; Auth.User {
-        ...
-    }
-}</code></pre>
-<blockquote>
-<p>Note: Try not to store passwords. If you must, hash and salt them.</p>
+<p>Note: The <code>add</code> command may have already started your app.</p>
 </blockquote>
         </main>
 
