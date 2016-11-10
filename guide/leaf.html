@@ -375,6 +375,37 @@
 } ##loop(friends, "friend") {
     &lt;li&gt; #(friend.name) &lt;/li&gt;
 }</code></pre>
+<h4 id="extending">Extending</h4>
+<pre><code class="language-swift">/// base.leaf
+&lt;!DOCTYPE html&gt;
+#import("html")
+
+/// html.leaf
+#extend("base")
+
+#export("html") {
+  &lt;html&gt;&lt;/html&gt;
+}</code></pre>
+<p>Leaf renders <code>html.leaf</code> as:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;&lt;/html&gt;</code></pre>
+<h4 id="embedding">Embedding</h4>
+<pre><code class="language-swift">/// base.leaf
+&lt;!DOCTYPE html&gt;
+#import("html")
+
+/// html.leaf
+#extend("base")
+
+#export("html") {
+  &lt;html&gt;#embed("body")&lt;/html&gt;
+}
+
+/// body.leaf
+&lt;body&gt;&lt;/body&gt;</code></pre>
+<p>Leaf renders <code>html.leaf</code> as:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;</code></pre>
 <h3 id="custom-tags">Custom Tags</h3>
 <p>Look at the existing tags for advanced scenarios, let's look at a basic example by creating <code>Index</code> together. This tag will take two arguments, an array, and an index to access.</p>
 <pre><code>class Index: BasicTag {
