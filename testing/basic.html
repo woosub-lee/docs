@@ -341,7 +341,7 @@ drop.run()</code></pre>
 </blockquote>
 <h2 id="testable-droplet">Testable Droplet</h2>
 <p>The first thing we'll do is in my testing target, add a file called <code>Droplet+Test.swift</code>. It will look like this:</p>
-<pre><code class="language-swift">import Vapor
+<pre><code class="language-swift">@testable import Vapor
 
 func makeTestDroplet() throws -&gt; Droplet {
     let drop = Droplet(arguments: ["dummy/path/", "prepare"], ...)
@@ -349,11 +349,13 @@ func makeTestDroplet() throws -&gt; Droplet {
     try drop.runCommands()
     return drop
 }</code></pre>
-<p>This looks a lot like our initializer in <code>main.swift</code>, but there are 2 very key differences.</p>
+<p>This looks a lot like our initializer in <code>main.swift</code>, but there are 3 very key differences.</p>
 <h3 id="dropletarguments-quotdummypathquot-quotpreparequot-">Droplet(arguments: [&quot;dummy/path/&quot;, &quot;prepare&quot;], ...</h3>
 <p>The <code>arguments:</code> parameter in our <code>Droplet</code> creation. This is rarely used except for advanced situations, but we'll use it here in testing to ensure that our <code>Droplet</code> doesn't try to automatically <code>serve</code> and block our thread. You can use arguments besides <code>"prepare"</code>, but unless you're doing something specific for an advanced situation, these arguments should suffice.</p>
 <h3 id="try-dropruncommands">try drop.runCommands()</h3>
 <p>You'll notice here that we're calling <code>runCommands()</code> instead of <code>run()</code>. This allows the <code>Droplet</code> to do all the setup it would normally do before booting without actually binding to a socket or exiting.</p>
+<h3><code>@testable import Vapor</code></h3>
+<p>We'll need to import the testable compilation of Vapor to access the <code>runCommands</code> function. This is currently not public as a protection against accidental bugs in live apps.</p>
 <h2 id="test-our-droplet">Test Our Droplet</h2>
 <p>Now that all of this has been created, we're ready to start testing our application's <code>Droplet</code>. Here's how a really basic test might look:</p>
 <pre><code class="language-swift">func testEndpoint() throws {
