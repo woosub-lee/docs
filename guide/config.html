@@ -334,7 +334,7 @@
   }
 }</code></pre>
 <p>This can be accessed from your application's config using the following.</p>
-<pre><code class="language-swift">let customValue = app.config["server", "http", "custom-key"].string</code></pre>
+<pre><code class="language-swift">let customValue = drop.config["server", "http", "custom-key"]?.string ?? "default"</code></pre>
 <p>That's it, feel free to add and utilize keys as necessary to make your application configuration easier.</p>
 <h2 id="config-syntax">Config Syntax</h2>
 <p>You can access your config directory with the following syntax. <code>app.config[&lt;#file-name#&gt;, &lt;#path#&gt;, &lt;#to#&gt;, &lt;#file#&gt;]</code>. For example, let's hypothesize that in addition to the <code>servers.json</code> file we mentioned earlier, there is also a <code>keys.json</code> that looks like this:</p>
@@ -349,9 +349,9 @@
   }
 }</code></pre>
 <p>We can access this file by making sure the first argument in our subscript is keys. To get the first name in our list:</p>
-<pre><code class="language-swift">let name = app.config["keys", "test-names", 0].string</code></pre>
+<pre><code class="language-swift">let name = drop.config["keys", "test-names", 0]?.string ?? "default"</code></pre>
 <p>Or our mongo url:</p>
-<pre><code class="language-swift">let mongoUrl = app.config["keys", "mongo", "url"].string</code></pre>
+<pre><code class="language-swift">let mongoUrl = drop.config["keys", "mongo", "url"].?string ?? "default"</code></pre>
 <h2 id="advanced-configurations">Advanced Configurations</h2>
 <p>Having the default servers.json is great, but what about more complex scenarios. For example, what if we want a different host in production and in development? These complex scenarios can be achieved by adding additional folder structure to our Config/ directory. Here's an example of a folder structure that's setup for production and development environments.</p>
 <pre><code class="language-bash">WorkingDirectory/
