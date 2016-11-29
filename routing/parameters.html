@@ -373,7 +373,7 @@
 <p>The resulting path for the above example is <code>/v1/users/:userId/posts/:postId</code>. If you are clamoring for more type safe routing, please let us know and we can look into increasing the limit of three.</p>
 <h2 id="manual">Manual</h2>
 <p>As shown briefly above, you are still free to do traditional routing. This can be useful for especially complex situations.</p>
-<pre><code class="language-swift">drop.get("v1", "users", ":userId", "posts", ":postId", "comments": ":commentId") { request in
+<pre><code class="language-swift">drop.get("v1", "users", ":userId", "posts", ":postId", "comments", ":commentId") { request in
   let userId = try request.parameters.extract("userId") as Int
   let postId = try request.parameters.extract("postId") as Int
   let commentId = try request.parameters.extract("commentId") as Int
@@ -425,7 +425,7 @@ userGroup.get("messages") { req in
                                 },
                                 {
                                     cN: 'keyword',
-                                    b: '#+[A-Za-z$_][0-9A-Za-z$_]*',
+                                    b: '#+([A-Za-z$_][0-9A-Za-z$_]*)?',
                                     eP: true
                                 },
                             ]
