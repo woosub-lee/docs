@@ -318,7 +318,7 @@
 }</code></pre>
 <p>This creates a route that matches <code>users/:id</code> where the <code>:id</code> is an <code>Int</code>. Here's what it would look like using manual route parameters.</p>
 <pre><code class="language-swift">drop.get("users", ":id") { request in
-  guard let userId = request.parameters["id"].int else {
+  guard let userId = request.parameters["id"]?.int else {
     throw Abort.badRequest
   }
 

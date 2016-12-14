@@ -351,7 +351,7 @@ drop.middleware.append(VersionMiddleware())</code></pre>
 <pre><code class="language-swift">enum FooError: Error {
     case fooServiceUnavailable
 }</code></pre>
-<p>Say there is a custom error that either you defined or one of the APIs you are using <code>throw</code>s. This error must be caught when thrown, or else it will end up as a server error which may be unexpected to a user. The most obvious solution is to catch the error in the route closure.</p>
+<p>Say there is a custom error that either you defined or one of the APIs you are using <code>throws</code>. This error must be caught when thrown, or else it will end up as a server error which may be unexpected to a user. The most obvious solution is to catch the error in the route closure.</p>
 <pre><code class="language-swift">app.get("foo") { request in
     let foo: Foo
     do {
@@ -413,14 +413,14 @@ drop.addConfigurable(middleware: myMiddleware, name: "my-middleware")</code></pr
 <pre><code class="language-swift">final class PokemonMiddleware: Middleware {
     let drop: Droplet
     init(drop: Droplet) {
-        self.drop = dropt
+        self.drop = drop
     }
 
     func respond(to request: Request, chainingTo next: Responder) throws -&gt; Response {
         let response = try next.respond(to: request)
 
         if let pokemon = response.pokemon {
-            request.accept.prefers("html") {
+            if request.accept.prefers("html") {
                 response.view = try drop.view("pokemon.mustache", context: pokemon)
             } else {
                 response.json = try pokemon.makeJSON()

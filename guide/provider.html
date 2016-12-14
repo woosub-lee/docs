@@ -314,7 +314,7 @@
 <h2 id="adding-a-provider">Adding a Provider</h2>
 <p>Adding a provider to your application takes 2-3 steps.</p>
 <h3 id="add-package">Add Package</h3>
-<p>All of Vapor's providers end with the <code>-provider</code> syntax. You can see a list of <a href="https://github.com/vapor?utf8=✓&amp;query=-provider">available providers</a> by searching on our GitHub.</p>
+<p>All of Vapor's providers end with the <code>-provider</code> syntax. You can see a list of <a href="https://github.com/vapor?utf8=✓&amp;q=-provider">available providers</a> by searching on our GitHub.</p>
 <p>To add the provider to your package, add it as a dependency in your <code>Package.swift</code> file.</p>
 <pre><code class="language-swift">let package = Package(
     name: "MyApp",
@@ -356,8 +356,8 @@ import VaporMySQL
 
 let drop = Droplet()
 
-let mysql = VaporMySQL.Provider(host: "localhost", user: "root")
-try drop.addProvider(mysql)
+let mysql = try VaporMySQL.Provider(host: "localhost", user: "root", password: "", database: "vapor")
+drop.addProvider(mysql)
 
 ...
 

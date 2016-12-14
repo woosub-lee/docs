@@ -310,7 +310,7 @@
         <main>
             <a href="https://github.com/vapor/documentation/blob/master/CONTRIBUTING.md" class="edit">✎ Edit on GitHub</a>
             <h1 id="leaf">Leaf</h1>
-<p>Welcome to Leaf. Leaf's goal is to be a simple templating language that can make generating views easier. There's a lot of great templating languages, use what's best for you, maybe that's leaf! The goals of leaf are as follows:</p>
+<p>Welcome to Leaf. Leaf's goal is to be a simple templating language that can make generating views easier. There's a lot of great templating languages, use what's best for you, maybe that's Leaf! The goals of Leaf are as follows:</p>
 <ul>
 <li>Small set of strictly enforced rules</li>
 <li>Consistency</li>
@@ -318,119 +318,114 @@
 <li>Extensibility</li>
 </ul>
 <h2 id="syntax">Syntax</h2>
-<p>Leaf syntax is based around a single token, in this case, the hashtag: <code>#</code>.</p>
-<blockquote>
-<p>It's important to note that <em>all</em> hashtags will be parsed, there is no escaping. Use <code>#()</code> to render a plain <code>#</code>. <code>#()Leaf</code> =&gt; <code>#Leaf</code>. Or, for larger sections, use the <code>raw</code> tag. <code>#raw() { #Do #whatever #you #want #to #in #here!. }</code></p>
-</blockquote>
 <h3 id="structure">Structure</h3>
-<p>Here we see all the components of a Leaf tag.</p>
-<pre><code class="language-leaf">#someTag(parameter.list, goes, "here") {
-  This is an optional body here
+<p>Leaf Tags are made up of 4 Elements:</p>
+<ul>
+<li>Token: <code>#</code> is the Token</li>
+<li>Name: A <code>string</code> that identifies the tag</li>
+<li>Parameter List: <code>()</code> May accept 0 or more arguments</li>
+<li>Body(optional): <code>{}</code> Must be separated from the Parameter List by a space</li>
+</ul>
+<p>There can be many different usages of these 4 elements depending on the Tag's implementation. Let's look at a few examples of how Leaf's built-in Tags might be used:</p>
+<ul>
+<li><code>#()</code></li>
+<li><code>#(variable)</code></li>
+<li><code>#import("template")</code></li>
+<li><code>#export("link") { &lt;a href="#()"&gt;&lt;/a&gt; }</code></li>
+<li><code>#index(friends, "0")</code></li>
+<li><code>#loop(friends, "friend") { &lt;li&gt;#(friend.name)&lt;/li&gt; }</code></li>
+<li><code>#raw() { &lt;a href="#raw"&gt;Anything goes!@#$%^&amp;*&lt;/a&gt; }</code></li>
+</ul>
+<h3 id="using-the">Using the <code>#</code> token in HTML</h3>
+<p>The token cannot be escaped. Use the <code>#()</code> or <code>#raw() {}</code> Tag to output a <code>#</code> in a Leaf Template. <code>#()</code> =&gt; <code>#</code></p>
+<h3 id="raw-html">Raw HTML</h3>
+<p>All Leaf output is escaped by default. Use the <code>#raw() {}</code> Tag for unescaped output.
+<code>#raw() { &lt;a href="#link"&gt;Link&lt;/a&gt; }</code> =&gt; <code>&lt;a href="#link"&gt;Link&lt;/a&gt;</code></p>
+<blockquote>
+<p>IMPORTANT!  Make sure you are not using the <code>#raw() {}</code> Tag with user input.</p>
+</blockquote>
+<h3 id="chaining">Chaining</h3>
+<p>The double token: <code>##</code> indicates a chain. It can be applied to any standard Tag. If the previous Tag fails, the chained Tag will be given an opportunity to run.</p>
+<pre><code>#if(hasFriends) ##embed("getFriends")</code></pre>
+<h3 id="leafs-built-in-tags">Leaf's built-in Tags</h3>
+<h4 id="token">Token: <code>#()</code></h4>
+<pre><code>#() #()hashtags #()FTW =&gt; # #Hashtags #FTW</code></pre>
+<h4 id="raw">Raw: <code>#raw() {}</code></h4>
+<pre><code>#raw() {
+    Do whatever w/ #'s here, this code won't be rendered as leaf document and is not escaped.
+    It's a great place for things like Javascript or large HTML sections.
 }</code></pre>
-<h5 id="token">Token</h5>
-<blockquote>
-<p>The <code>#</code> token will define we're a tag</p>
-</blockquote>
-<h5 id="name">Name</h5>
-<blockquote>
-<p>In above example, it would be <code>someTag</code>. While not strictly enforced, it is <strong>highly</strong> encouraged that users only use alphanumeric characters in names. This may be enforced in future versions.</p>
-</blockquote>
-<h5 id="parameter-list">Parameter List</h5>
-<p><code>Var(parameter, list), Var(goes), Const("here")</code></p>
-<h5 id="body">Body</h5>
-<blockquote>
-<p>This is an optional body here indicated w/ open and closed curly brackets.</p>
-</blockquote>
-<h4 id="using--in-html-with-leaf">Using # in html with Leaf</h4>
-<p>If you need # to appear alone in your html, simply using <code>#()</code> will render as #. Alternatively, the raw tag is available for larger sections of code:</p>
-<pre><code class="language-leaf">#raw() {
-   Do whatever w/ #'s here, this code
-   won't be rendered as leaf document.
-   It's a great place for things like Javascript or large HTML sections.
-}</code></pre>
-<h2 id="syntax-highlighting">Syntax Highlighting</h2>
-<h3 id="atom">Atom</h3>
-<p><a href="https://atom.io/packages/language-leaf">language-leaf</a> by ButkiewiczP</p>
-<h2 id="examples">Examples</h2>
-<h4 id="variable">Variable</h4>
-<p>Variables are added w/ just a number sign.</p>
-<pre><code class="language-leaf">Hello, #(name)!</code></pre>
-<h4 id="loop">Loop</h4>
-<p>Loop a variable</p>
-<pre><code class="language-leaf">#loop(friends, "friend") {
+<h4 id="equal">Equal: <code>#equal(lhs, rhs) {}</code></h4>
+<pre><code>#equal(leaf, leaf) { Leaf == Leaf } =&gt; Leaf == Leaf
+#equal(leaf, mustache) { Leaf == Mustache } =&gt;</code></pre>
+<h4 id="variable">Variable: <code>#(variable)</code></h4>
+<pre><code>Hello, #(name)!</code></pre>
+<h4 id="loop">Loop: <code>#loop(object, "index")</code></h4>
+<pre><code>#loop(friends, "friend") {
   Hello, #(friend.name)!
 }</code></pre>
-<h4 id="if---else">If - Else</h4>
-<pre><code class="language-leaf">#if(entering) {
+<h4 id="index">Index: <code>#loop(object, "index")</code></h4>
+<pre><code>Hello, #index(friends, "0")!</code></pre>
+<h4 id="if---else">If - Else: <code>#if(bool) ##else() { this }</code></h4>
+<pre><code>#if(entering) {
   Hello, there!
 } ##if(leaving) {
   Goodbye!
 } ##else() {
   I've been here the whole time.
 }</code></pre>
-<h4 id="chaining">Chaining</h4>
-<p>The double token, <code>##</code> indicates a chain. If the previous tag fails, this tag will be given an opportunity to run. It can be applied to any standard tag, for example, above we chain to else, but we could also chain to loops.</p>
-<pre><code class="language-leaf">#empty(friends) {
-    Try adding some friends!
-} ##loop(friends, "friend") {
-    &lt;li&gt; #(friend.name) &lt;/li&gt;
-}</code></pre>
-<h4 id="extending">Extending</h4>
-<pre><code class="language-swift">/// base.leaf
+<h4 id="import">Import: <code>#import("template")</code></h4>
+<h4 id="export">Export: <code>#export("template") { Leaf/HTML }</code></h4>
+<h4 id="extend">Extend: <code>#extend("template")</code></h4>
+<h4 id="embed">Embed: <code>#embed("template")</code></h4>
+<blockquote>
+<p>When using these Layout Tags, omit the template file's .leaf extension.</p>
+</blockquote>
+<pre><code>/// base.leaf
 &lt;!DOCTYPE html&gt;
 #import("html")
 
 /// html.leaf
 #extend("base")
 
-#export("html") {
-  &lt;html&gt;&lt;/html&gt;
-}</code></pre>
-<p>Leaf renders <code>html.leaf</code> as:</p>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;&lt;/html&gt;</code></pre>
-<h4 id="embedding">Embedding</h4>
-<pre><code class="language-leaf">/// base.leaf
-&lt;!DOCTYPE html&gt;
-#import("html")
-
-/// html.leaf
-#extend("base")
-
-#export("html") {
-  &lt;html&gt;#embed("body")&lt;/html&gt;
-}
+#export("html") { &lt;html&gt;#embed("body")&lt;/html&gt; }
 
 /// body.leaf
 &lt;body&gt;&lt;/body&gt;</code></pre>
 <p>Leaf renders <code>html.leaf</code> as:</p>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+<pre><code>&lt;!DOCTYPE html&gt;
 &lt;html&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;</code></pre>
 <h3 id="custom-tags">Custom Tags</h3>
 <p>Look at the existing tags for advanced scenarios, let's look at a basic example by creating <code>Index</code> together. This tag will take two arguments, an array, and an index to access.</p>
-<pre><code>class Index: BasicTag {
-    let name = "index"
+<pre><code class="language-swift">class Index: BasicTag {
+  let name = "index"
 
-    func run(arguments: [Argument]) throws -&gt; Node? {
-        guard
-            arguments.count == 2,
-            let array = arguments[0].value?.nodeArray,
-            let index = arguments[1].value?.int,
-            index &lt; array.count
-            else { return nil }
+  func run(arguments: [Argument]) throws -&gt; Node? {
+    guard
+      arguments.count == 2,
+      let array = arguments[0].value?.nodeArray,
+      let index = arguments[1].value?.int,
+      index &lt; array.count
+    else { return nil }
         return array[index]
     }
 }</code></pre>
-<p>Now, after creating our <code>Stem</code>, we can register the tag:</p>
-<pre><code>stem.register(Index())</code></pre>
-<p>And use it like so:</p>
-<pre><code>Hello, #index(friends, "0")!</code></pre>
-<p>We can also chain <code>else</code> to this like we did earlier if we want to check existence first:</p>
-<pre><code>#index(friends, "0") {
-    Hello, #(self)!
-} ##else() {
-    Nobody's there!
+<p>We can now register this Tag in our <code>main.swift</code> file with:</p>
+<pre><code class="language-swift">if let leaf = drop.view as? LeafRenderer {
+    leaf.stem.register(Version())
 }</code></pre>
+<p>And use it just like we did <a href="#index">above</a>.</p>
+<blockquote>
+<p>Note: Use of non-alphanumeric characters in Tag Names is <strong>strongly discouraged</strong> and may be disallowed in future versions of Leaf.</p>
+</blockquote>
+<h2 id="syntax-highlighting">Syntax Highlighting</h2>
+<h3 id="atom">Atom</h3>
+<p><a href="https://atom.io/packages/language-leaf">language-leaf</a> by ButkiewiczP</p>
+<h3 id="xcode">Xcode</h3>
+<p>It is not currently possible to implement Leaf Syntax Highlighting in Xcode, however, using Xcode's HTML Syntax Coloring can help a bit. Select one or more Leaf files and then choose Editor &gt; Syntax Coloring &gt; HTML.  Your selected Leaf files will now use Xcode's HTML Syntax Coloring.  Unfortunately the usefulness of this is limited because this association will be removed when <code>vapor xcode</code> is run.</p>
+<p>There appears to be a way to <a href="http://stackoverflow.com/questions/9050035/how-to-make-xcode-recognize-a-custom-file-extension-as-objective-c-for-syntax-hi">make Xcode file associations persist</a> but that requires a bit more kung-fu.</p>
+<h3 id="clion-amp-appcode">CLion &amp; AppCode</h3>
+<p>Some preliminary work has been done to implement a Leaf Plugin for CLion &amp; AppCode but lack of skill and interest in Java has slowed progress! If you have IntelliJ SDK experience and want to help with this, message Tom Holland on <a href="http://vapor.team">Vapor Slack</a></p>
         </main>
 
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
