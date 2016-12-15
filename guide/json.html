@@ -323,7 +323,7 @@
 <h3 id="json-only">JSON Only</h3>
 <p>To specifically target JSON, use the <code>request.json</code> property.</p>
 <pre><code class="language-swift">drop.post("json") { request in
-    guard let name = request.json["name"].string else {
+    guard let name = request.json?["name"]?.string else {
         throw Abort.badRequest
     }
 
