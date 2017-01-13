@@ -159,7 +159,12 @@
                         </li>
                                             <li class="">
                             <a href="https://vapor.github.io/documentation/routing/parameters.html">
-                                Parameters
+                                Route Parameters
+                            </a>
+                        </li>
+                                            <li class="">
+                            <a href="https://vapor.github.io/documentation/routing/query-parameters.html">
+                                Query Parameters
                             </a>
                         </li>
                                             <li class="">
@@ -283,6 +288,11 @@
                     <h3>Testing</h3>
                     <ul>
                                             <li class="">
+                            <a href="https://vapor.github.io/documentation/testing/modules.html">
+                                Modules
+                            </a>
+                        </li>
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/testing/basic.html">
                                 Basic
                             </a>
@@ -324,8 +334,15 @@ print(spotifyR)</code></pre>
 <pre><code class="language-swift">try drop.client.get("https://api.spotify.com/v1/search", query: ["type": "artist", "q": query])</code></pre>
 <h3 id="continued">Continued</h3>
 <p>In addition to <code>GET</code> requests, Vapor's client provides support for most common HTTP functions. <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code></p>
+<h3 id="post-as-json">POST as json</h3>
 <pre><code class="language-swift">let bytes = myJSON.makeBytes()
 try drop.client.post("http://some-endpoint/json", headers: ["Auth": "Token my-auth-token"], body: .data(jsonBytes))</code></pre>
+<h3 id="post-as-x-www-form-urlencoded">POST as x-www-form-urlencoded</h3>
+<pre><code class="language-swift">try drop.client.post("http://some-endpoint", headers: [
+  "Content-Type": "application/x-www-form-urlencoded"
+], body: Body.data( Node([
+  "email": "mymail@vapor.codes"
+]).formURLEncoded()))               </code></pre>
 <h3 id="full-request">Full Request</h3>
 <p>To access additional functionality or custom methods, use the underlying <code>request</code> function directly.</p>
 <pre><code class="language-swift">public static func get(_ method: Method,

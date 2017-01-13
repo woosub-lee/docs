@@ -159,7 +159,12 @@
                         </li>
                                             <li class="">
                             <a href="https://vapor.github.io/documentation/routing/parameters.html">
-                                Parameters
+                                Route Parameters
+                            </a>
+                        </li>
+                                            <li class="">
+                            <a href="https://vapor.github.io/documentation/routing/query-parameters.html">
+                                Query Parameters
                             </a>
                         </li>
                                             <li class="">
@@ -283,6 +288,11 @@
                     <h3>Testing</h3>
                     <ul>
                                             <li class="">
+                            <a href="https://vapor.github.io/documentation/testing/modules.html">
+                                Modules
+                            </a>
+                        </li>
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/testing/basic.html">
                                 Basic
                             </a>
@@ -364,8 +374,9 @@
 <pre><code>#loop(friends, "friend") {
   Hello, #(friend.name)!
 }</code></pre>
-<h4 id="index">Index: <code>#loop(object, "index")</code></h4>
-<pre><code>Hello, #index(friends, "0")!</code></pre>
+<h4 id="index">Index: <code>#index(object, _ index: Int|String)</code></h4>
+<pre><code>Hello, #index(friends, 0)!
+Hello, #index(friends, "best")!</code></pre>
 <h4 id="if---else">If - Else: <code>#if(bool) ##else() { this }</code></h4>
 <pre><code>#if(entering) {
   Hello, there!
@@ -412,7 +423,7 @@
 }</code></pre>
 <p>We can now register this Tag in our <code>main.swift</code> file with:</p>
 <pre><code class="language-swift">if let leaf = drop.view as? LeafRenderer {
-    leaf.stem.register(Version())
+    leaf.stem.register(Index())
 }</code></pre>
 <p>And use it just like we did <a href="#index">above</a>.</p>
 <blockquote>
@@ -428,6 +439,8 @@
 <p><a href="https://marketplace.visualstudio.com/items?itemName=Francisco.html-leaf">vscode-html-leaf</a> by FranciscoAmado</p>
 <h3 id="clion-amp-appcode">CLion &amp; AppCode</h3>
 <p>Some preliminary work has been done to implement a Leaf Plugin for CLion &amp; AppCode but lack of skill and interest in Java has slowed progress! If you have IntelliJ SDK experience and want to help with this, message Tom Holland on <a href="http://vapor.team">Vapor Slack</a></p>
+<h3 id="vs-code">VS Code</h3>
+<p><a href="https://marketplace.visualstudio.com/items?itemName=Francisco.html-leaf">html-leaf</a> by FranciscoAmado</p>
         </main>
 
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

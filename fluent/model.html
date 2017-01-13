@@ -159,7 +159,12 @@
                         </li>
                                             <li class="">
                             <a href="https://vapor.github.io/documentation/routing/parameters.html">
-                                Parameters
+                                Route Parameters
+                            </a>
+                        </li>
+                                            <li class="">
+                            <a href="https://vapor.github.io/documentation/routing/query-parameters.html">
+                                Query Parameters
                             </a>
                         </li>
                                             <li class="">
@@ -283,6 +288,11 @@
                     <h3>Testing</h3>
                     <ul>
                                             <li class="">
+                            <a href="https://vapor.github.io/documentation/testing/modules.html">
+                                Modules
+                            </a>
+                        </li>
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/testing/basic.html">
                                 Basic
                             </a>
@@ -363,7 +373,7 @@ import Fluent</code></pre>
 <p>In most of the cases you do not need to be concerned about <code>context</code> argument of the <code>makeNode(context:)</code> method. It’s a part of the protocol that allows extensibility in more advanced or specific scenarios.</p>
 </blockquote>
 <h2 id="preparations">Preparations</h2>
-<p>Some databases, like MySQL, need to be prepared for a new schema. In MySQL, this means creating a new table.</p>
+<p>Some databases, like MySQL, need to be prepared for a new schema. In MySQL, this means creating a new table. Preparations are also equatable to migrations, as they can be used to alter schemas after they've already been created.</p>
 <h3 id="prepare">Prepare</h3>
 <p>Let's assume we are using a SQL database. To prepare the database for our <code>User</code> class, we need to create a table. If you are using a database like Mongo, you can leave this method unimplemented.</p>
 <pre><code class="language-swift">final class User {
@@ -385,6 +395,21 @@ import Fluent</code></pre>
     ...
 }</code></pre>
 <p>Here we are deleting the table named <code>users</code>.</p>
+<h3 id="preparations-as-migrations">Preparations as Migrations</h3>
+<p>If you want to add a field to your table after you've already created the initial schema, you can create a struct or class that conforms to <code>Preparation</code> like so:</p>
+<pre><code class="language-swift">
+struct AddFooToBar: Preparation {
+    static func prepare(_ database: Database) throws {
+        try database.modify("bars", closure: { bar in
+            bar.string("foo", length: 150, optional: false, unique: false, default: nil)
+        })
+    }
+
+    static func revert(_ database: Database) throws {
+
+    }
+}</code></pre>
+<p>Then, in your Droplet setup, add this line: <code>drop.preparations.append(AddFooToBar.self)</code></p>
 <h3 id="droplet">Droplet</h3>
 <p>To run these prepations when the applications boots, you must add the Model to the <code>Droplet</code>.</p>
 <pre><code class="language-swift">let drop = Droplet()

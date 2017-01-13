@@ -222,7 +222,7 @@
                                 Request
                             </a>
                         </li>
-                                            <li class="active">
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/auth/protect.html">
                                 Protect
                             </a>
@@ -319,22 +319,71 @@
 
         <main>
             <a href="https://github.com/vapor/documentation/blob/master/CONTRIBUTING.md" class="edit">✎ Edit on GitHub</a>
-            <h1 id="protect">Protect</h1>
-<p>Once the <code>AuthMiddleware</code> has been enabled, you can use <code>ProtectMiddleware</code> to prevent certain routes from being accessed without authorization.</p>
-<h2 id="create">Create</h2>
-<p>To create a <code>ProtectMiddleware</code>, you must give it the error to throw in case authorization fails.</p>
-<pre><code class="language-swift">let error = Abort.custom(status: .forbidden, message: "Invalid credentials.")
-let protect = ProtectMiddleware(error: error)</code></pre>
-<p>Here we pass it a simple 403 response.</p>
-<h2 id="route-group">Route Group</h2>
-<p>Once the middleware has been created, you can add it to route groups. Learn more about middleware and routing in <a href="../routing/group.html">route groups</a>.</p>
-<pre><code>drop.grouped(protect).group("secure") { secure in
-    secure.get("about") { req in
-        let user = try req.user()
-        return user
-    }
+            <h1 id="cors">CORS</h1>
+<p>Vapor by default provides a middleware for implementing proper support for Cross-Origin Resource Sharing (CORS) named <code>CORSMiddleware</code>.</p>
+<p>&quot;Cross-Origin Resource Sharing (CORS) is a specification that enables truly open access across domain-boundaries. If you serve public content, please consider using CORS to open it up for universal JavaScript / browser access.&quot; - <a href="http://enable-cors.org/"><a href="http://enable-cors.org/">http://enable-cors.org/</a></a></p>
+<p>To learn more about middlewares, please visit the Middleware section of the documentation <a href="https://vapor.github.io/documentation/guide/middleware.html">here</a>.</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Flowchart_showing_Simple_and_Preflight_XHR.svg" alt="" />
+<em>Image Author: <a href="https://commons.wikimedia.org/wiki/File:Flowchart_showing_Simple_and_Preflight_XHR.svg">Wikipedia</a></em></p>
+<h2 id="basic">Basic</h2>
+<p>First of all, add the CORS middleware into your droplet middlewares array.</p>
+<pre><code class="language-swift"># Insert CORS before any other middlewares
+drop.middleware.insert(CORSMiddleware(), at: 0)</code></pre>
+<blockquote>
+<p>Note: Make sure you insert CORS middleware before any other throwing middlewares, like the AbortMiddleware or similar. Otherwise the proper headers might not be added to the response.</p>
+</blockquote>
+<p><code>CORSMiddleware</code> has a default configuration which should suit most users, with values as follows:</p>
+<ul>
+<li><strong>Allowed Origin</strong> 
+<ul>
+<li>Value of origin header in the request.</li>
+</ul></li>
+<li><strong>Allowed Methods</strong> 
+<ul>
+<li><code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>OPTIONS</code>, <code>DELETE</code>, <code>PATCH</code></li>
+</ul></li>
+<li><strong>Allowed Headers</strong>
+<ul>
+<li><code>Accept</code>, <code>Authorization</code>, <code>Content-Type</code>, <code>Origin</code>, <code>X-Requested-With</code></li>
+</ul></li>
+</ul>
+<h2 id="advanced">Advanced</h2>
+<p>All settings and presets can be customized by advanced users. There's two ways of doing this, either you programatically create and configure a <code>CORSConfiguration</code> object or you can put your configuration into a Vapor's JSON config file.</p>
+<p>See below for how to set up both and what are the options.</p>
+<h3 id="configuration">Configuration</h3>
+<p>The <code>CORSConfiguration</code> struct is used to configure the <code>CORSMiddleware</code>. You can instanitate one like this:</p>
+<pre><code class="language-swift">let configuration = CORSConfiguration(allowedOrigin: .custom("https://vapor.codes"),
+                                          allowedMethods: [.get, .post, .options],
+                                          allowedHeaders: ["Accept", "Authorization"],
+                                          allowCredentials: false,
+                                          cacheExpiration: 600,
+                                          exposedHeaders: ["Cache-Control", "Content-Language"])</code></pre>
+<p>After creating a configuration you can add the CORS middleware.</p>
+<pre><code class="language-swift">drop.middleware.insert(CORSMiddleware(configuration: configuration), at: 0)</code></pre>
+<blockquote>
+<p>Note: Please consult the documentation in the source code of the <code>CORSConfiguration</code> for more information about available values for the settings.</p>
+</blockquote>
+<h3 id="json-config">JSON Config</h3>
+<p>Optionally, <code>CORSMiddleware</code> can be configured using the Vapor's <code>Config</code> which is created out of the json files contained in your Config folder. You will need to create a file called <code>cors.json</code> or <code>CORS.json</code> in your Config folder in your project and add the required keys.</p>
+<p>Example of how such a file could look as follows:</p>
+<pre><code class="language-swift">{
+    "allowedOrigin": "origin",
+    "allowedMethods": "GET,POST,PUT,OPTIONS,DELETE,PATCH",
+    "allowedHeaders": ["Accept", "Authorization", "Content-Type", "Origin", "X-Requested-With"]
+}
+</code></pre>
+<blockquote>
+<p>Note: Following keys are required: <code>allowedOrigin</code>, <code>allowedMethods</code>, <code>allowedHeaders</code>. If they are not present an error will be thrown while instantiating the middleware.</p>
+<p>Optionally you can also specify the keys <code>allowCredentials</code> (Bool), <code>cacheExpiration</code> (Int) and <code>exposedHeaders</code> ([String]).</p>
+</blockquote>
+<p>Afterwards you can add the middleware using the a throwing overload of the initialiser that accepts Vapor's <code>Config</code>.</p>
+<pre><code class="language-swift">let drop = Droplet()
+
+do {
+    drop.middleware.insert(try CORSMiddleware(configuration: drop.config), at: 0)
+} catch {
+    fatalError("Error creating CORSMiddleware, please check that you've setup cors.json correctly.")
 }</code></pre>
-<p>Visiting <code>GET /secure/about</code> will return the authorized user, or an error if no user is authorized.</p>
         </main>
 
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

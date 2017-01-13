@@ -159,7 +159,12 @@
                         </li>
                                             <li class="">
                             <a href="https://vapor.github.io/documentation/routing/parameters.html">
-                                Parameters
+                                Route Parameters
+                            </a>
+                        </li>
+                                            <li class="">
+                            <a href="https://vapor.github.io/documentation/routing/query-parameters.html">
+                                Query Parameters
                             </a>
                         </li>
                                             <li class="">
@@ -283,6 +288,11 @@
                     <h3>Testing</h3>
                     <ul>
                                             <li class="">
+                            <a href="https://vapor.github.io/documentation/testing/modules.html">
+                                Modules
+                            </a>
+                        </li>
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/testing/basic.html">
                                 Basic
                             </a>
@@ -310,7 +320,7 @@
         <main>
             <a href="https://github.com/vapor/documentation/blob/master/CONTRIBUTING.md" class="edit">✎ Edit on GitHub</a>
             <h1 id="install-toolbox">Install Toolbox</h1>
-<p>Vapor's command line interface provides shortcuts and assistance for commons tasks.</p>
+<p>Vapor's command line interface provides shortcuts and assistance for common tasks.</p>
 <p><img src="https://cloud.githubusercontent.com/assets/1342803/17454691/97e549e2-5b6d-11e6-979a-f0cd6b6f1b0a.png" alt="Vapor Toolbox" /></p>
 <blockquote>
 <p>If you do not want to install the Toolbox, checkout the <a href="manual.html">Manual</a> quickstart.</p>
@@ -324,11 +334,19 @@
 <h3 id="verify">Verify</h3>
 <p>Make sure the Toolbox installed successfully by running the help query. You should see a print out of the available commands. You can run the <code>--help</code> option on any Toolbox command.</p>
 <pre><code class="language-sh">vapor --help</code></pre>
+<h2 id="create-a-project">Create A Project</h2>
+<p>Now that you have installed the Toolbox, you can create your first Vapor project following the <a href="hello-world.html">Hello, World guide</a>.</p>
 <h3 id="updating">Updating</h3>
 <p>The toolbox can update itself. This may be useful if you experience any issues in the future.</p>
 <pre><code class="language-sh">vapor self update</code></pre>
-<h2 id="create-a-project">Create A Project</h2>
-<p>Now that you have installed the Toolbox, you can create your first Vapor project following the <a href="hello-world.html">Hello, World guide</a>.</p>
+<h3 id="templates">Templates</h3>
+<p>The toolbox can create a project from the Vapor basic-template or any other git repo.</p>
+<pre><code class="language-sh">vapor new &lt;name&gt; [--template=&lt;repo-url-or-github-path&gt;]</code></pre>
+<p>The toolbox will build an absolute URL based on what you pass as the template option. If you do not specify a template option, the project will be built from the  Vapor basic-template.</p>
+<pre><code class="language-sh">Default(no template option specified) =&gt; https://github.com/vapor/basic-template
+http(s)://example.com/repo-path =&gt; http(s)://example.com/repo-path
+user/repo =&gt; https://github.com/user/repo
+light =&gt; https://github.com/vapor/light-template</code></pre>
         </main>
 
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

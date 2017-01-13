@@ -222,7 +222,7 @@
                                 Request
                             </a>
                         </li>
-                                            <li class="active">
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/auth/protect.html">
                                 Protect
                             </a>
@@ -287,7 +287,7 @@
                             <section>
                     <h3>Testing</h3>
                     <ul>
-                                            <li class="">
+                                            <li class="active">
                             <a href="https://vapor.github.io/documentation/testing/modules.html">
                                 Modules
                             </a>
@@ -319,22 +319,34 @@
 
         <main>
             <a href="https://github.com/vapor/documentation/blob/master/CONTRIBUTING.md" class="edit">✎ Edit on GitHub</a>
-            <h1 id="protect">Protect</h1>
-<p>Once the <code>AuthMiddleware</code> has been enabled, you can use <code>ProtectMiddleware</code> to prevent certain routes from being accessed without authorization.</p>
-<h2 id="create">Create</h2>
-<p>To create a <code>ProtectMiddleware</code>, you must give it the error to throw in case authorization fails.</p>
-<pre><code class="language-swift">let error = Abort.custom(status: .forbidden, message: "Invalid credentials.")
-let protect = ProtectMiddleware(error: error)</code></pre>
-<p>Here we pass it a simple 403 response.</p>
-<h2 id="route-group">Route Group</h2>
-<p>Once the middleware has been created, you can add it to route groups. Learn more about middleware and routing in <a href="../routing/group.html">route groups</a>.</p>
-<pre><code>drop.grouped(protect).group("secure") { secure in
-    secure.get("about") { req in
-        let user = try req.user()
-        return user
-    }
-}</code></pre>
-<p>Visiting <code>GET /secure/about</code> will return the authorized user, or an error if no user is authorized.</p>
+            <h1 id="using-multiple-modules-for-testing">Using Multiple Modules For Testing</h1>
+<p>Testing a Vapor app gets tricky, and requires some maneuvering of your app targets.</p>
+<blockquote>
+<p>[WARNING] Technically this is only necessary if you plan to run your tests on Linux. You can keep your tests in the same module if you want to only run your tests from the command line using <code>vapor test</code></p>
+</blockquote>
+<h2><strong>Step 1:</strong> Update Package.swift</h2>
+<p>To start, you need to split up your Vapor project into a target called <code>App</code>, and a target called <code>AppLogic</code>. The App module will only include a <code>main.swift</code>, and your <code>AppLogic</code> will contain the actual logic for the app.</p>
+<pre><code class="language-swift">import PackageDescription
+
+let package = Package(
+    name: “ProjectName”,
+    targets: [
+        Target(name: "App", dependencies: ["AppLogic"])
+    ],
+    dependencies: [
+        .Package(url: "https://github.com/vapor/vapor.git", majorVersion: 1, minor: 3)
+    ],
+    exclude: [
+        "Config",
+        "Database",
+        "Localization",
+        "Public",
+        "Resources"
+    ]
+)</code></pre>
+<h2><strong>Step 2:</strong> Update Tests Folder</h2>
+<p>Make sure that your tests folder has a file called <code>LinuxMain.swift</code> and a folder called <code>AppLogicTests</code>. In your <code>AppLogicTests</code>, you can add your testing files like <code>UserTests.swift</code>.</p>
+<p>As always, make sure that you regenerate with <code>vapor xcode -y</code></p>
         </main>
 
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

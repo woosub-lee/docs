@@ -159,7 +159,12 @@
                         </li>
                                             <li class="">
                             <a href="https://vapor.github.io/documentation/routing/parameters.html">
-                                Parameters
+                                Route Parameters
+                            </a>
+                        </li>
+                                            <li class="">
+                            <a href="https://vapor.github.io/documentation/routing/query-parameters.html">
+                                Query Parameters
                             </a>
                         </li>
                                             <li class="">
@@ -282,6 +287,11 @@
                             <section>
                     <h3>Testing</h3>
                     <ul>
+                                            <li class="">
+                            <a href="https://vapor.github.io/documentation/testing/modules.html">
+                                Modules
+                            </a>
+                        </li>
                                             <li class="active">
                             <a href="https://vapor.github.io/documentation/testing/basic.html">
                                 Basic
@@ -312,7 +322,7 @@
             <h1 id="basic-testing">Basic Testing</h1>
 <p>Testing is a critical part of any software application, and Vapor apps should be no different. In this documentation, we'll cover some of the basic setup required to be able to test against our <code>Droplet</code>.</p>
 <h2 id="displacing-droplet-creation-logic">Displacing Droplet Creation Logic</h2>
-<p>Up to this point, a lot of our documentation has centered around putting our <code>Droplet</code> creation logic in <code>main.swift</code>. Unfortunately, when testing against our application, this code becomes largely inaccessible. The first thing we'll need to do is break this out.</p>
+<p>Up to this point, a lot of our documentation has centered around putting our <code>Droplet</code> creation logic in <code>main.swift</code>. Unfortunately, when testing against our application, this code becomes largely inaccessible. The first thing we'll need to do is break this out into the <code>AppLogic</code> module.</p>
 <p>Here's an example of my setup file. I name mine <code>Droplet+Setup.swift</code>. Here's how it might look:</p>
 <pre><code class="language-swift">import Vapor
 
@@ -332,7 +342,7 @@ func load(_ drop: Droplet) throws {
 <p>[WARNING] Do <strong>not</strong> call <code>run()</code> anywhere within the <code>load</code> function as <code>run()</code> is a blocking call.</p>
 </blockquote>
 <h2 id="updated">Updated <code>main.swift</code></h2>
-<p>Now that we've abstracted our loading logic, we'll need to update our <code>main.swift</code> to reflect those changes. Here's how it should look after:</p>
+<p>Now that we've abstracted our loading logic, we'll need to update our <code>main.swift</code> <strong>in the <code>App</code> module</strong> to reflect those changes. Here's how it should look after:</p>
 <pre><code class="language-swift">let drop = Droplet(...)
 try load(drop)
 drop.run()</code></pre>
@@ -358,7 +368,9 @@ func makeTestDroplet() throws -&gt; Droplet {
 <p>We'll need to import the testable compilation of Vapor to access the <code>runCommands</code> function. This is currently not public as a protection against accidental bugs in live apps.</p>
 <h2 id="test-our-droplet">Test Our Droplet</h2>
 <p>Now that all of this has been created, we're ready to start testing our application's <code>Droplet</code>. Here's how a really basic test might look:</p>
-<pre><code class="language-swift">func testEndpoint() throws {
+<pre><code class="language-swift">@testable import AppLogic
+
+func testEndpoint() throws {
     let drop = try makeTestDroplet()
     let request = ...
     let expectedBody = ...
@@ -366,6 +378,7 @@ func makeTestDroplet() throws -&gt; Droplet {
     let response = try drop.respond(to: request)
     XCTAssertEqual(expectedBody, response.body.bytes)
 }</code></pre>
+<p>Notice that now you can use <code>CMD-U</code> to run your tests in Xcode with in-line results. In addition, you can run <code>vapor test</code> to test your code from the command line. If you choose to use <code>swift build</code> instead and you are using MySQL in your app, make sure you add the correct build flags to the call. </p>
 <p>Good luck, and happy testing!</p>
         </main>
 

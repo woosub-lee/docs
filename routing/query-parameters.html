@@ -162,7 +162,7 @@
                                 Route Parameters
                             </a>
                         </li>
-                                            <li class="">
+                                            <li class="active">
                             <a href="https://vapor.github.io/documentation/routing/query-parameters.html">
                                 Query Parameters
                             </a>
@@ -222,7 +222,7 @@
                                 Request
                             </a>
                         </li>
-                                            <li class="active">
+                                            <li class="">
                             <a href="https://vapor.github.io/documentation/auth/protect.html">
                                 Protect
                             </a>
@@ -319,22 +319,25 @@
 
         <main>
             <a href="https://github.com/vapor/documentation/blob/master/CONTRIBUTING.md" class="edit">✎ Edit on GitHub</a>
-            <h1 id="protect">Protect</h1>
-<p>Once the <code>AuthMiddleware</code> has been enabled, you can use <code>ProtectMiddleware</code> to prevent certain routes from being accessed without authorization.</p>
-<h2 id="create">Create</h2>
-<p>To create a <code>ProtectMiddleware</code>, you must give it the error to throw in case authorization fails.</p>
-<pre><code class="language-swift">let error = Abort.custom(status: .forbidden, message: "Invalid credentials.")
-let protect = ProtectMiddleware(error: error)</code></pre>
-<p>Here we pass it a simple 403 response.</p>
-<h2 id="route-group">Route Group</h2>
-<p>Once the middleware has been created, you can add it to route groups. Learn more about middleware and routing in <a href="../routing/group.html">route groups</a>.</p>
-<pre><code>drop.grouped(protect).group("secure") { secure in
-    secure.get("about") { req in
-        let user = try req.user()
-        return user
-    }
+            <h1 id="query-parameters">Query Parameters</h1>
+<p>Request query parameters can be accessed either as a dictionary or using the <code>extract</code> syntax which throws instead of returning an optional.</p>
+<h2 id="optional-syntax">Optional Syntax</h2>
+<p>Optional syntax is the easiest way to handle optional query parameters.</p>
+<pre><code class="language-swift">drop.get("comments") { request in
+    if let rating = request.query?["rating"]?.int {
+    return "You requested comments with rating greater than #\(rating)"
+  }
+  return "You requested all comments"
 }</code></pre>
-<p>Visiting <code>GET /secure/about</code> will return the authorized user, or an error if no user is authorized.</p>
+<h2 id="extract-syntax">Extract Syntax</h2>
+<p>Extract syntax might be useful to <em>enforce</em> the presence of query parameters and throw an exception if they are not present.
+To use this syntax first we need to ensure the query object is present with a <code>guard</code>.</p>
+<pre><code class="language-swift">drop.get("comments") { request in
+        guard let rating = request.query?["rating"]?.int else {
+            throw Abort.custom(status: .preconditionFailed, message: "Please include a rating")
+        }
+  return "You requested comments with rating greater than #\(rating)"
+}</code></pre>
         </main>
 
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
