@@ -366,7 +366,7 @@ request.headers["Content-Type"] = "application/json"
 request.headers["Authorization"] = ... my auth token</code></pre>
 <h4 id="extending-headers">Extending Headers</h4>
 <p>We generally seek to improve code bases by removing stringly typed code where possible. We can add variables to the headers using generic extensions.</p>
-<pre><code class="language-swift">extension KeyAccessible where Key == HeaderKey, Value == String {
+<pre><code class="language-swift">extension HTTP.KeyAccessible where Key == HeaderKey, Value == String {
     var customKey: String? {
       get {
         return self["Custom-Key"]
