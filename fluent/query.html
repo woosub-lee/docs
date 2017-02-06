@@ -366,9 +366,9 @@
 <p>The above example with users and pets assumes the following schema.</p>
 <pre><code>users
 - id
-- pet_id
 pets
-- id</code></pre>
+- id
+- user_id</code></pre>
 <p>Custom foreign keys can be provided through overloads to <code>union</code>.</p>
 <h2 id="raw-queries">Raw Queries</h2>
 <p>Since Fluent is focused on interacting with models, each Query requires a model type. If you want to do raw database queries that aren't based on a model, you should use the underlying Fluent Driver to do so.</p>

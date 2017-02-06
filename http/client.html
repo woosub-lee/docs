@@ -340,7 +340,7 @@ print(spotifyR)</code></pre>
 <h3 id="continued">Continued</h3>
 <p>In addition to <code>GET</code> requests, Vapor's client provides support for most common HTTP functions. <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code></p>
 <h3 id="post-as-json">POST as json</h3>
-<pre><code class="language-swift">let bytes = myJSON.makeBytes()
+<pre><code class="language-swift">let jsonBytes = myJSON.makeBytes()
 try drop.client.post("http://some-endpoint/json", headers: ["Auth": "Token my-auth-token"], body: .data(jsonBytes))</code></pre>
 <h3 id="post-as-x-www-form-urlencoded">POST as x-www-form-urlencoded</h3>
 <pre><code class="language-swift">try drop.client.post("http://some-endpoint", headers: [
