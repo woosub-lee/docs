@@ -366,9 +366,9 @@
 <p>We can access this file by making sure the first argument in our subscript is keys. To get the first name in our list:</p>
 <pre><code class="language-swift">let name = drop.config["keys", "test-names", 0]?.string ?? "default"</code></pre>
 <p>Or our mongo url:</p>
-<pre><code class="language-swift">let mongoUrl = drop.config["keys", "mongo", "url"].?string ?? "default"</code></pre>
+<pre><code class="language-swift">let mongoUrl = drop.config["keys", "mongo", "url"]?.string ?? "default"</code></pre>
 <h2 id="advanced-configurations">Advanced Configurations</h2>
-<p>Having the default servers.json is great, but what about more complex scenarios. For example, what if we want a different host in production and in development? These complex scenarios can be achieved by adding additional folder structure to our Config/ directory. Here's an example of a folder structure that's setup for production and development environments.</p>
+<p>Having the default <code>servers.json</code> is great, but what about more complex scenarios. For example, what if we want a different host in production and in development? These complex scenarios can be achieved by adding additional folders to our <code>Config/</code> directory. Here's an example of a folder structure that's setup for production and development environments.</p>
 <pre><code class="language-bash">WorkingDirectory/
 ├── Config/
 │   ├── servers.json
@@ -390,13 +390,13 @@
 <li>Config/name-of-environment/</li>
 <li>Config/</li>
 </ol>
-<p>What this means is that if a user calls <code>app.config["servers", "host"]</code>, the key will be searched in the cli first, then the secrets directory, then the top level default configs.</p>
+<p>What this means is that if a user calls <code>app.config["servers", "host"]</code>, the key will be searched in the CLI first, then the <code>secrets/</code> directory, then the top level default configs.</p>
 <blockquote>
 <p><code>secrets/</code> directory should very likely be added to the gitignore.</p>
 </blockquote>
 <h3 id="example">EXAMPLE</h3>
 <p>Let's start with the following JSON files.</p>
-<h4 id="serversjson">servers.json</h4>
+<h4><code>servers.json</code></h4>
 <pre><code class="language-JSON">{
   "http": {
     "host": "0.0.0.0",
@@ -413,19 +413,19 @@
 <blockquote>
 <p>The <code>"$NAME"</code> syntax is available for all values to access environment variables.</p>
 </blockquote>
-<p>Please notice that servers.json, and production/servers.json both declare the same keys. host, and port. In our application, we'll call:</p>
+<p>Please notice that <code>servers.json</code>, and <code>production/servers.json</code> both declare the same keys: <code>host</code>, and <code>port</code>. In our application, we'll call:</p>
 <pre><code class="language-swift">// will load 0.0.0.0 or 127.0.0.1 based on above config
 let host = drop.config["servers", "http", "host"]?.string ?? "0.0.0.0"
 // will load 9000, or environment variable port.
 let port = drop.config["servers", "http", "port"]?.int ?? 9000</code></pre>
 <h2 id="command-line">COMMAND LINE</h2>
-<p>In addition to json files nested within the Config/ directory, we can also use the command line to pass arguments into our config. By default, these values will be set as the &quot;cli&quot; file, but more complex options are also available.</p>
+<p>In addition to json files nested within the <code>Config/</code> directory, we can also use the command line to pass arguments into our config. By default, these values will be set as the &quot;cli&quot; file, but more complex options are also available.</p>
 <h4 id="1">1. <code>--KEY=VALUE</code></h4>
 <p>Arguments set through the command line can be accessed through config's cli file. For example, the following CLI command:</p>
 <pre><code class="language-bash">--mongo-password=$MONGO_PASSWORD</code></pre>
 <p>would be accessible within your application by using the following:</p>
 <pre><code class="language-swift">let mongoPassword = drop.config["cli", "mongo-password"]?.string</code></pre>
-<h4 id="2---configfile-namekeycustom-value">2. --CONFIG:FILE-NAME.KEY=CUSTOM-VALUE</h4>
+<h4 id="2">2. <code>--CONFIG:FILE-NAME.KEY=CUSTOM-VALUE</code></h4>
 <p>If you want command line arguments set to a file besides &quot;cli&quot;, you can use this more advanced specification. For example, the following CLI command:</p>
 <pre><code class="language-bash">--config:keys.analytics=124ZH61F</code></pre>
 <p>would be accessible within your application by using the following:</p>

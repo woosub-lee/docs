@@ -326,7 +326,7 @@
             <a href="https://github.com/vapor/documentation/blob/master/CONTRIBUTING.md" class="edit">✎ Edit on GitHub</a>
             <h1 id="middleware">Middleware</h1>
 <p>Middleware is an essential part of any modern web framework. It allows you to modify requests and responses as they pass between the client and your server.</p>
-<p>You can imagine middleware as a chain of logic connection your server to the client requesting your web app.</p>
+<p>You can imagine middleware as a chain of logic connecting your server to the client requesting your web app.</p>
 <h2 id="basic">Basic</h2>
 <p>As an example, let's create a middleware that will add the version of our API to each response. The middleware would look something like this:</p>
 <pre><code class="language-swift">final class VersionMiddleware: Middleware {
@@ -400,7 +400,7 @@ drop.middleware.append(VersionMiddleware())</code></pre>
 }</code></pre>
 <p>Interestingly, this is how <code>Abort</code> itself is implemented in Vapor. <code>AbortMiddleware</code> catches any <code>Abort</code> errors and returns a JSON response. Should you want to customize how <code>Abort</code> errors appear, you can remove this middleware and add your own.</p>
 <h2 id="configuration">Configuration</h2>
-<p>Appending middleware ot the <code>drop.middleware</code> array is the simplest way to add middleware--it will be used every time the application starts.</p>
+<p>Appending middleware to the <code>drop.middleware</code> array is the simplest way to add middleware--it will be used every time the application starts.</p>
 <p>You can also use the <a href="config.html">configuration</a> files to enabled or disable middleware for more control. This is especially useful if you have middleware that should, for example, run only in production.</p>
 <p>Appending configurable middleware looks like the following:</p>
 <pre><code class="language-swift">let drop = Droplet()

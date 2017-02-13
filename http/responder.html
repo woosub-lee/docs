@@ -328,7 +328,7 @@
 <p>Module: <code>import HTTP</code></p>
 </blockquote>
 <h1 id="responder">Responder</h1>
-<p>The <code>Responder</code> is a simple protocol defining the behavior of objects that can accept a <code>Request</code> and return a <code>Response</code>. Most notably in Vapor, it is the core api endpoint that connects the <code>Droplet</code> to the <code>Server</code>. Let's look at the definition:</p>
+<p>The <code>Responder</code> is a simple protocol defining the behavior of objects that can accept a <code>Request</code> and return a <code>Response</code>. Most notably in Vapor, it is the core API endpoint that connects the <code>Droplet</code> to the <code>Server</code>. Let's look at the definition:</p>
 <pre><code class="language-swift">public protocol Responder {
     func respond(to request: Request) throws -&gt; Response
 }</code></pre>
@@ -369,7 +369,7 @@ try server.start(responder: Responder()) { error in
 }</code></pre>
 <p>This can be used as a jumping off point for applications looking to implement features manually.</p>
 <h2 id="client">Client</h2>
-<p>The <code>HTTP.Client</code> is itself a <code>Responder</code> although, instead of handling the <code>Request</code> itself, it passes it on to the underlying uri. </p>
+<p>The <code>HTTP.Client</code> is itself a <code>Responder</code> although, instead of handling the <code>Request</code> itself, it passes it on to the underlying URI. </p>
         </main>
 
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

@@ -352,7 +352,7 @@ Valid&lt;Count&lt;T&gt;&gt;</code></pre>
 <p>Validators, like <code>Count</code> or <code>Contains</code> can have multiple configurations. For example:</p>
 <pre><code class="language-swift">let name: Valid&lt;Count&lt;String&gt;&gt; = try "Vapor".validated(by: Count.max(5))</code></pre>
 <p>Here we are validating that the <code>String</code> is at most 5 characters long. The type of <code>Valid&lt;Count&gt;</code> tells us that the string has been validated to be a certain count, but it does not tell us exactly what that count was. The string could have been validated to be less than three characters or more than one million.</p>
-<p>Because of this, <code>Validators</code> themselves are not as type safe as some applications might desire. <code>ValidationSuites</code> fix this. They combine multiple <code>Validators</code> and/or <code>ValidationSuites</code> together to represent exactly what type of data should be considered valid</p>
+<p>Because of this, <code>Validators</code> themselves are not as type safe as some applications might desire. <code>ValidationSuites</code> fix this. They combine multiple <code>Validators</code> and/or <code>ValidationSuites</code> together to represent exactly what type of data should be considered valid.</p>
 <h2 id="custom-validator">Custom Validator</h2>
 <p>Here is how to create a custom <code>ValidationSuite</code>.</p>
 <pre><code class="language-swift">class Name: ValidationSuite {
@@ -364,8 +364,8 @@ Valid&lt;Count&lt;T&gt;&gt;</code></pre>
         try evaluation.validate(input: value)
     }
 }</code></pre>
-<p>You only have to implement one method. In this method, use any other validators or logic to create your custom validator. Here we are defining a Name as only accepting alphanumeric Strings that are between 5 and 20 characters.</p>
-<p>Now we can be sure that anything of type Valid<Name> follows these rules.</p>
+<p>You only have to implement one method. In this method, use any other validators or logic to create your custom validator. Here we are defining a <code>Name</code> as only accepting alphanumeric Strings that are between 5 and 20 characters.</p>
+<p>Now we can be sure that anything of type <code>Valid&lt;Name&gt;</code> follows these rules.</p>
 <h2 id="combining-validators">Combining Validators</h2>
 <p>In the <code>Name</code> validator, you can see that <code>&amp;&amp;</code> is being used to combine validators. You can use <code>&amp;&amp;</code> as well as <code>||</code> to combine any validator as you would boolean values with an <code>if</code> statement.</p>
 <p>You can also use <code>!</code> to invert the validator.</p>

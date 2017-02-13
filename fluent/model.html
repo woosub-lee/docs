@@ -347,7 +347,7 @@ import Fluent</code></pre>
 }</code></pre>
 <p>The compiler will inform you that some methods need to be implemented to conform.</p>
 <h3 id="id">ID</h3>
-<p>The first required property is an identifier. This property will contain the identifier when the model is fetched from the database. If it is nil, it will be set when the model is saved.</p>
+<p>The first required property is an identifier. This property will contain the identifier when the model is fetched from the database. If it is <code>nil</code>, it will be set when the model is saved.</p>
 <pre><code class="language-swift">final class User: Model {
     var id: Node?
     ...
@@ -363,7 +363,7 @@ import Fluent</code></pre>
 }</code></pre>
 <p>The keys <code>id</code> and <code>name</code> are what we expect the columns or fields in the database to be named. The <code>extract</code> call is marked with a <code>try</code> because it will throw an error if the value is not present or is the wrong type.</p>
 <h3 id="node-representable">Node Representable</h3>
-<p>Now that we have covered initializing the model, we need to show it how to save back into the database. Model uses <code>NodeRepresentable</code> to achieve this.</p>
+<p>Now that we have covered initializing the model, we need to show how to save it back into the database. Model uses <code>NodeRepresentable</code> to achieve this.</p>
 <pre><code class="language-swift">final class User: Model {
     func makeNode(context: Context) throws -&gt; Node {
         return try Node(node: [

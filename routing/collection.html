@@ -361,7 +361,7 @@ drop.collection(v1)</code></pre>
 <pre><code class="language-swift">let v1 = builder.grouped("v1")</code></pre>
 <p>From there you can create routes with the <code>builder</code> as usual. The <code>builder: B</code> will work exactly like a <code>Droplet</code> or route <a href="group.html">group</a>. Any methods that work there will work on this builder.</p>
 <h2 id="empty-initializable">Empty Initializable</h2>
-<p>You can even add <code>EmptyInitializable</code> to your route collection if it has an empty init method. This will allow you to add the route collection via its type name.</p>
+<p>You can even add <code>EmptyInitializable</code> to your route collection if it has an empty <code>init</code> method. This will allow you to add the route collection via its type name.</p>
 <pre><code class="language-swift">class V1Collection: RouteCollection, EmptyInitializable {
     init() { }
     ...</code></pre>

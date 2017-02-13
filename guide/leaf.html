@@ -339,7 +339,7 @@
 <li>Token: <code>#</code> is the Token</li>
 <li>Name: A <code>string</code> that identifies the tag</li>
 <li>Parameter List: <code>()</code> May accept 0 or more arguments</li>
-<li>Body(optional): <code>{}</code> Must be separated from the Parameter List by a space</li>
+<li>Body (optional): <code>{}</code> Must be separated from the Parameter List by a space</li>
 </ul>
 <p>There can be many different usages of these 4 elements depending on the Tag's implementation. Let's look at a few examples of how Leaf's built-in Tags might be used:</p>
 <ul>
@@ -352,7 +352,7 @@
 <li><code>#raw() { &lt;a href="#raw"&gt;Anything goes!@#$%^&amp;*&lt;/a&gt; }</code></li>
 </ul>
 <h3 id="using-the">Using the <code>#</code> token in HTML</h3>
-<p>The token cannot be escaped. Use the <code>#()</code> or <code>#raw() {}</code> Tag to output a <code>#</code> in a Leaf Template. <code>#()</code> =&gt; <code>#</code></p>
+<p>The <code>#</code> token cannot be escaped. Use the <code>#()</code> or <code>#raw() {}</code> Tag to output a <code>#</code> in a Leaf Template. <code>#()</code> =&gt; <code>#</code></p>
 <h3 id="raw-html">Raw HTML</h3>
 <p>All Leaf output is escaped by default. Use the <code>#raw() {}</code> Tag for unescaped output.
 <code>#raw() { &lt;a href="#link"&gt;Link&lt;/a&gt; }</code> =&gt; <code>&lt;a href="#link"&gt;Link&lt;/a&gt;</code></p>

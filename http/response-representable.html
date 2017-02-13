@@ -328,7 +328,7 @@
 <p>Module: <code>import HTTP</code></p>
 </blockquote>
 <h1 id="responserepresentable">ResponseRepresentable</h1>
-<p>Traditionally HTTP servers take a <code>Request</code> and return a <code>Response</code>. Vapor is no different, but we can take advantage of Swift's powerful protocols to be a bit more flexible to the user facing api.</p>
+<p>Traditionally HTTP servers take a <code>Request</code> and return a <code>Response</code>. Vapor is no different, but we can take advantage of Swift's powerful protocols to be a bit more flexible to the user facing API.</p>
 <p>Let's start with the definition of <code>ResponseRepresentable</code></p>
 <pre><code class="language-swift">public protocol ResponseRepresentable {
     func makeResponse() throws -&gt; Response

@@ -325,9 +325,9 @@
         <main>
             <a href="https://github.com/vapor/documentation/blob/master/CONTRIBUTING.md" class="edit">✎ Edit on GitHub</a>
             <h1 id="commands">Commands</h1>
-<p>Custom console commands on vapor are a breeze.</p>
+<p>Custom console commands on Vapor are a breeze.</p>
 <h2 id="example">Example</h2>
-<p>To make a custom console command we must first create a new .swift file, import Vapor and Console, and implement the Command protocol.</p>
+<p>To make a custom console command we must first create a new <code>.swift</code> file, import <code>Vapor</code> and <code>Console</code>, and implement the <code>Command</code> protocol.</p>
 <pre><code class="language-swift">import Vapor
 import Console
 
@@ -346,14 +346,14 @@ final class MyCustomCommand: Command {
 }</code></pre>
 <ul>
 <li>The <strong>id</strong> property is the string you will type in the console to access the command. <code>.build/debug/App command</code> will run the Custom Command.</li>
-<li>The <strong>help</strong> property is the help message that will give your custom command's users some idea as to how to access it.</li>
+<li>The <strong>help</strong> property is the help message that will give your custom command's users some idea of how to access it.</li>
 <li>The <strong>console</strong> property is the object passed to your custom command that adheres to the console protocol, allowing manipulation of the console.</li>
 <li>The <strong>run</strong> method is where you put the logic relating to your command.</li>
 </ul>
-<p>After we work our magic in the Custom Command file, we switch over to our main.swift file and add the custom command to the droplet like so.</p>
+<p>After we work our magic in the Custom Command file, we switch over to our <code>main.swift</code> file and add the custom command to the droplet like so.</p>
 <pre><code class="language-swift">drop.commands.append(MyCustomCommand(console: drop.console))</code></pre>
-<p>This allows vapor access to our custom command and lets it know to display it in the --help section of the program.</p>
-<p>After compiling the application we can run our custom command like so</p>
+<p>This allows Vapor access to our custom command and lets it know to display it in the <code>--help</code> section of the program.</p>
+<p>After compiling the application we can run our custom command like so.</p>
 <pre><code>.build/debug/App command</code></pre>
         </main>
 

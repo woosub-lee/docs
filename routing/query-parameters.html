@@ -330,18 +330,18 @@
 <p>Optional syntax is the easiest way to handle optional query parameters.</p>
 <pre><code class="language-swift">drop.get("comments") { request in
     if let rating = request.query?["rating"]?.int {
-    return "You requested comments with rating greater than #\(rating)"
-  }
-  return "You requested all comments"
+        return "You requested comments with rating greater than #\(rating)"
+    }
+    return "You requested all comments"
 }</code></pre>
 <h2 id="extract-syntax">Extract Syntax</h2>
 <p>Extract syntax might be useful to <em>enforce</em> the presence of query parameters and throw an exception if they are not present.
 To use this syntax first we need to ensure the query object is present with a <code>guard</code>.</p>
 <pre><code class="language-swift">drop.get("comments") { request in
-        guard let rating = request.query?["rating"]?.int else {
-            throw Abort.custom(status: .preconditionFailed, message: "Please include a rating")
-        }
-  return "You requested comments with rating greater than #\(rating)"
+    guard let rating = request.query?["rating"]?.int else {
+        throw Abort.custom(status: .preconditionFailed, message: "Please include a rating")
+    }
+    return "You requested comments with rating greater than #\(rating)"
 }</code></pre>
         </main>
 
