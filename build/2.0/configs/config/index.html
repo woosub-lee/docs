@@ -11,7 +11,7 @@
       
         <link rel="shortcut icon" href="../../assets/images/favicon.png">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.1.1">
+      <meta name="generator" content="mkdocs-0.17.2, mkdocs-material-1.1.1">
     
     
       
@@ -114,7 +114,7 @@
   
 
 
-  <a href="https://github.com/vapor/documentation" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/vapor/documentation/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -161,7 +161,7 @@
   
 
 
-  <a href="https://github.com/vapor/documentation" title="Go to repository" class="md-source" data-md-source="github">
+  <a href="https://github.com/vapor/documentation/" title="Go to repository" class="md-source" data-md-source="github">
     
       <div class="md-source__icon">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -1650,6 +1650,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../deploy/cloud/" title="Cloud" class="md-nav__link">
+      Cloud
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../deploy/nginx/" title="Nginx" class="md-nav__link">
       Nginx
     </a>
@@ -1724,6 +1736,18 @@
   <li class="md-nav__item">
     <a href="../../version/2_0/" title="2.0" class="md-nav__link">
       2.0
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../version/3_0/" title="3.0-beta" class="md-nav__link">
+      3.0-beta
     </a>
   </li>
 
@@ -1965,16 +1989,16 @@
 
 
 <h2 id="advanced-configurations">Advanced Configurations<a class="headerlink" href="#advanced-configurations" title="Permanent link">&para;</a></h2>
-<p>Having the default <code>servers.json</code> is great, but what about more complex scenarios. For example, what if we want a different host in production and in development? These complex scenarios can be achieved by adding additional folders to our <code>Config/</code> directory. Here's an example of a folder structure that's setup for production and development environments.</p>
+<p>Having the default <code>server.json</code> is great, but what about more complex scenarios. For example, what if we want a different host in production and in development? These complex scenarios can be achieved by adding additional folders to our <code>Config/</code> directory. Here's an example of a folder structure that's setup for production and development environments.</p>
 <div class="codehilite"><pre><span></span>WorkingDirectory/
 ├── Config/
-│   ├── servers.json
+│   ├── server.json
 │   ├── production/
-│   │   └── servers.json
+│   │   └── server.json
 │   ├── development/
-│   │   └── servers.json
+│   │   └── server.json
 │   └── secrets/
-│       └── servers.json
+│       └── server.json
 </pre></div>
 
 
