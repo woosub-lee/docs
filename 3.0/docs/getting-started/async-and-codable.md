@@ -25,8 +25,6 @@ With this addition, the above struct can now be (de-)serialized between JSON, XM
 
 # Async
 
-To understand asynchronous code you must first understand what synchronous code does.
+Asynchronous is event driven programming. Asynchronous shines best in a real world scenario and is much more scalable and performant than synchronous code. To support Asynchronous code we introduce [Futures](../async/promise-future-introduction.md) in Vapor 3.
 
-Synchronous code is code that writes top to bottom and executes exactly in that order independent of your use case. It does not use callbacks, it does not use futures and it does not use streams. Many information is not immediately available. The internet has a delay between any communication traffic. Querying a database requires sending the query to the database, waiting for the database to process and execute the request, and then receiving the requested information. To keep code synchronous you need to "block" the thread. This results in rendering the thread unusable until the response has been received. This is, naturally, inefficient. You're wasting a thread and much performance.
-
-The only clean solution here is to do nonblocking operations. This means that once you send the query, you continue to the next line of code immediately without waiting/blocking. The problem that arises is that the next lines of code are dependent on the result of the previous query's results. For this reason, Vapor 3 introduces [Futures](../async/promise-future-introduction.md). Futures are very common in many (high performance) ecosystems.
+We recommend reading the basics when you're interacting with [REST APIs](../http/client.md) and [databases](databases.md).

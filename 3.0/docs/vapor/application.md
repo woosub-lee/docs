@@ -15,19 +15,11 @@ import Vapor
 
 let application = Application()
 
+let router = try app.make(Router.self)
+
 // Set up your routes etc..
 
 try application.run()
-```
-
-You can override the default config, environment and services like so:
-
-```swift
-let config: Config = ...
-let environment = Environment.production
-var services = Services.default()
-
-// configure services, otherwise there's no Server and Router
 ```
 
 ## Application routing services

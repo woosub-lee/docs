@@ -1,7 +1,5 @@
 # Introduction into Promises and Futures
 
-When working with asynchronous APIs, one of the problems you'll face is not knowing when a variable is set.
-
 When querying a database synchronously, the thread is blocked until a result has been received. At which point the result will be returned to you and the thread continues from where you left off querying the database.
 
 ```swift
@@ -137,9 +135,9 @@ future.then { string in
 
 ## Synchronous APIs
 
-Sometimes, an API needs to be used synchronously in a synchronous envinronment.
+Sometimes, an API needs to be used synchronously in a synchronous environment. This is almost always used for unit testing.
 
-Rather than using a synchronous API with all edge cases involved, we recommend using the `try future.blockingAwait()` function.
+Rather than using a synchronous API, we recommend using the `try future.blockingAwait()`. This is more stable and 
 
 ```swift
 // The future provided by the above function will be used
