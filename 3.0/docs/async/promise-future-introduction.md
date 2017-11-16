@@ -135,9 +135,9 @@ future.then { string in
 
 ## Synchronous APIs
 
-Sometimes, an API needs to be used synchronously in a synchronous environment. This is almost always used for unit testing.
+Sometimes, an API needs to be used synchronously in a synchronous environment. This is almost always useful for unit testing.
 
-Rather than using a synchronous API, we recommend using the `try future.blockingAwait()`. This is more stable and 
+Rather than using a synchronous API, we recommend using the `try future.blockingAwait()`. This is more stable and
 
 ```swift
 // The future provided by the above function will be used

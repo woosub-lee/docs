@@ -4,8 +4,7 @@ Routing is a library containing all Routing related APIs.
 
 ### Index
 
-- [Aync routing](async.md)
-- [Sync routing](sync.md)
+- [Basics](basics.md)
 - [Route Parameters](parameters.md)
 - [Route](route.md)
 - [TrieRouter](router.md)
